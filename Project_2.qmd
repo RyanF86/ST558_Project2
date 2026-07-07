@@ -8,11 +8,13 @@ This markdown document will include a description of the dataset, detailed data 
 
 ```{r}
 #| message: false
+#| warning: false
 library(tidyr)
 library(dplyr)
 library(readr)
+library(janitor)
+library(forcats)
 ```
-
 
 ## 1. Description of Dataset
 
@@ -38,14 +40,14 @@ Combining and cleaning the data will involve the following general steps:
 
 2.  Delete variables and/or observations that will not be used in subsequent analysis
 
-3.  Confirm correct format/type for all remaining variables
+3.  Add new variables calculated from existing variables
 
-4.  Add new variables calculated from existing variables
+4.  Confirm correct format/type for all variables
 
 The variables for the "-matches.csv" files are as follows:
 
 | Variable | Type | Notes |
-|------------------|------------------|-------------------------------------|
+|------------------|------------------|------------------------------------|
 | match_id | Identifier | Will use for join with overview files |
 | Player 1 | Categorical | Name of Player 1 |
 | Player 2 | Categorical | Name of Player 2 |
@@ -65,10 +67,10 @@ The variables for the "-matches.csv" files are as follows:
 The variables for the "-Overview.csv" files are as follows:
 
 | Variable | Type | Notes |
-|-----------------|-----------------|--------------------------------------|
+|------------------|------------------|-------------------------------------|
 | match_id | Identifier | Will use for join with overview files |
 | player | Categorical | Name of player |
-| set | Categorical | Stats by set number. Filter later to keep only "Total" |
+| set | Categorical | Stats by set number. Filter later to keep only "Total" and then delete. |
 | serve_pts | Numerical | Points served |
 | aces | Numerical | Aces |
 | dfs | Numerical | Double faults |
@@ -107,6 +109,7 @@ W_Overview <- read_csv("RawData/charting-w-stats-Overview.csv")
 # print rows 906 to 909 to see if we can diagnose
 M_Matches[906:909, ]
 ```
+
 ```{r}
 # Row 907 has data issues, but also is redundant with row 908 
 # Delete Row 907
@@ -132,7 +135,6 @@ W_Matches <- W_Matches |>
          `Best of` = as.numeric(`Best of`))
 ```
 
-
 - Join each match table to the corresponding overview table
 
 ```{r}
@@ -147,6 +149,66 @@ CombinedData <- bind_rows(M = M_Data, W = W_Data, .id = "Tour") # new "Tour" var
 ```
 
 2.  Delete variables and/or observations that will not be used in subsequent analysis
+
+- First delete rows and columns as described earlier. Also fix remaining names
+
+```{r}
+CombinedData <- CombinedData |>
+  filter(set == "Total") |> # only include full match observations (exclude per set observations)
+  select(-Time, # deleting variables as described earlier
+         -Court,
+         -Umpire,
+         -`Final TB?`,
+         -`Charted by`,
+         -set) |>
+  clean_names() # to correct variable names with spaces and non-standard characters
+```
+
+- Each row represents a single player for a particular match. As such, "player_1" and "player_2" are redundant with "player". However they do correlate with "pl_1_hand" and "pl_2_hand". Let's delete those four variables while creating new variable "handed" that indicates whether "player" is left or right-handed.
+
+```{r}
+CombinedData <- CombinedData |>
+  mutate(handed = case_when(
+    player == player_1 ~ pl_1_hand, # if player is player_1, assign pl_1_hand
+    player == player_2 ~ pl_2_hand, # if player is player_2, assign pl_2_hand
+    TRUE ~ NA_character_ # otherwise (i.e. name mismatch or missing assign NA)
+  )) |>
+  select (-player_1,
+          -player_2,
+          -pl_1_hand,
+          -pl_2_hand) # deleting variables no longer needed
+```
+
+3.  Add new variables calculated from existing variables
+
+- Percentage variables are more useful for analysis than count variables, because they are less dependent upon the length of the match.
+
+```{r}
+CombinedData <- CombinedData |>
+  mutate(total_pts = serve_pts + return_pts, # total points played
+         first_in_pct = first_in / serve_pts, # first serve in percentage
+         ace_pct = aces / serve_pts, # percentage of service points that are aces
+         first_won_pct = first_won / first_in, # percentage of points won on first serve
+         second_won_pct = second_won / (second_in + dfs), # percentage of points won on second serve
+         total_won_pct = (first_won + second_won + return_pts_won) / total_pts, # percentage of total points won
+         df_pct = dfs / (serve_pts - first_in), # double fault percentage
+         bp_saved_pct = bp_saved / bk_pts, # break point save percentage
+         serve_pts_won_pct = (first_won + second_won) / serve_pts, # percentage of service points won
+         return_pts_won_pct = return_pts_won / return_pts, # percentage of return points won
+         winner_pct = winners / total_pts, # percentage of points ending in winner
+         unforced_pct = unforced / total_pts, # percentage of points ending in unforced error
+         winner_fh_pct = winners_fh / total_pts, # percentage of points ending in forehand winner
+         winner_bh_pct = winners_bh / total_pts, # percentage of points ending in backhand winner
+         unforced_fh_pct = unforced_fh / total_pts, # percentage of points ending in forehand unforced error
+         unforced_bh_pct = unforced_bh / total_pts) # percentage of points ending in backhand unforced error
+```
+
+
+4.  Confirm correct format/type for all variables
+
+
+
+
 
 ## 3. EDA Summary Tables
 
