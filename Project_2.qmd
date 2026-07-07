@@ -1,0 +1,153 @@
+---
+title: "Project 2"
+format: html
+editor: visual
+---
+
+This markdown document will include a description of the dataset, detailed data combining/cleaning activities, and exploratory data analysis with summary tables and plots. These steps are prerequisite to creating the associated Shiny dashboard app.
+
+```{r}
+#| message: false
+library(tidyr)
+library(dplyr)
+library(readr)
+```
+
+
+## 1. Description of Dataset
+
+The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <https://github.com/JeffSackmann/tennis_MatchChartingProject.git>. The MCP aims to build a detailed public record of professional tennis matches. MCP data covers over 11,000 singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the summary data.
+
+Four raw data .csv files are downloaded from the GitHub repo and placed in `RawData/`:
+
+- `charting-m-matches.csv`
+
+- `charting-m-stats-Overview.csv`
+
+- `charting-w-matches.csv`
+
+- `charting-w-stats-Overview.csv`
+
+"m" and "w" indicate men's and women's professional tennis tour matches, respectively. "...-matches.csv" files contain general information on the matches played such as players, date, tournament, and surface. "...-stats-Overview.csv" files contain more detailed match performance information such as points won, aces, unforced errors, etc. Each observation across all four files contains a match_id variable, indicating the specific match observed. This variable will be used to join the data.
+
+## 2. Data Combination and Cleaning
+
+Combining and cleaning the data will involve the following general steps:
+
+1.  Combine all four raw data files into a single tibble, adding a categorical variable to indicate 'M' or 'W' tour.
+
+2.  Delete variables and/or observations that will not be used in subsequent analysis
+
+3.  Confirm correct format/type for all remaining variables
+
+4.  Add new variables calculated from existing variables
+
+The variables for the "-matches.csv" files are as follows:
+
+| Variable | Type | Notes |
+|------------------|------------------|-------------------------------------|
+| match_id | Identifier | Will use for join with overview files |
+| Player 1 | Categorical | Name of Player 1 |
+| Player 2 | Categorical | Name of Player 2 |
+| Pl 1 hand | Categorical | Handed for Player 1 |
+| Pl 2 hand | Categorical | Handed for Player 2 |
+| Date | Numerical | Currently stored as YYYYMMDD integer. |
+| Tournament | Categorical | Name of Tournament |
+| Round | Categorical | Round of the Tournament (i.e. F, SF, R64, etc.) |
+| Time | Categorical | Many missing values and inconsistent formatting. Delete later. |
+| Court | Categorical | Name/number of court. Many missing values. Delete later. |
+| Surface | Categorical | Hard, Clay or Grass |
+| Umpire | Categorical | Name of umpire. Many missing values. Delete later. |
+| Best of | Numerical | Best of 3 or Best of 5. |
+| Final TB? | Categorical | Meaning unclear. Delete later. |
+| Charted by | Categorical | Name of data contributer. Delete later. |
+
+The variables for the "-Overview.csv" files are as follows:
+
+| Variable | Type | Notes |
+|-----------------|-----------------|--------------------------------------|
+| match_id | Identifier | Will use for join with overview files |
+| player | Categorical | Name of player |
+| set | Categorical | Stats by set number. Filter later to keep only "Total" |
+| serve_pts | Numerical | Points served |
+| aces | Numerical | Aces |
+| dfs | Numerical | Double faults |
+| first_in | Numerical | First serves in play |
+| first_won | Numerical | First serve points won |
+| second_in | Numerical | Second serves in play |
+| second_won | Numerical | Second serve points won |
+| bk_pts | Numerical | Break points won |
+| bp_saved | Numerical | Break points saved |
+| return_pts | Numerical | Points returned |
+| return_pts_won | Numerical | Return points won |
+| winners | Numerical | Winners |
+| winners_fh | Numerical | Forehand winners |
+| winners_bh | Numerical | Backhand winners |
+| unforced | Numerical | Unforced errors |
+| unforced_fh | Numerical | Forehand unforced errors |
+| unforced_bh | Numerical | Backhand unforced errors |
+
+Now to begin data combination and cleaning:
+
+1.  Combine all four raw data files into a single tibble, adding a categorical variable to track men's vs women's tour.
+
+```{r}
+#| message: false
+#| warning: false
+# Read in the four .csv files
+M_Matches <- read_csv("RawData/charting-m-matches.csv")
+M_Overview <- read_csv("RawData/charting-m-stats-Overview.csv")
+W_Matches <- read_csv("RawData/charting-w-matches.csv")
+W_Overview <- read_csv("RawData/charting-w-stats-Overview.csv")
+# some error messages occurred for M_Matches and W_Matches during import
+```
+
+```{r}
+# problems(M_Matches) indicates rows 907 and 908 of have issues
+# print rows 906 to 909 to see if we can diagnose
+M_Matches[906:909, ]
+```
+```{r}
+# Row 907 has data issues, but also is redundant with row 908 
+# Delete Row 907
+M_Matches <- M_Matches[-907, ]
+```
+
+```{r}
+# problems(W_Matches) indicates rows 1586 to 1594 have issues
+# print rows 1585 to 1595 to see if we can diagnose
+W_Matches[1585:1595, ]
+```
+
+```{r}
+# Rows 1585 to 1594 have issues.  They have the wrong data in the wrong columns and/or are missing the surface data.
+# Let's delete these rows.
+W_Matches <- W_Matches[-(1585:1594), ]
+```
+
+```{r}
+# Also variables Date and 'Best of' imported as chr while M_Matches has them as numeric.  Let's fix that.
+W_Matches <- W_Matches |>
+  mutate(Date = as.numeric(Date),
+         `Best of` = as.numeric(`Best of`))
+```
+
+
+- Join each match table to the corresponding overview table
+
+```{r}
+M_Data <- left_join(M_Overview, M_Matches, by = "match_id")
+W_Data <- left_join(W_Overview, W_Matches, by = "match_id")
+```
+
+- Combine the men's and women's data
+
+```{r}
+CombinedData <- bind_rows(M = M_Data, W = W_Data, .id = "Tour") # new "Tour" variable will be "M" or "W" depending on data source
+```
+
+2.  Delete variables and/or observations that will not be used in subsequent analysis
+
+## 3. EDA Summary Tables
+
+## 4. EDA Plots
