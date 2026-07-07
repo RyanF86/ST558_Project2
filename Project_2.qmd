@@ -9,11 +9,8 @@ This markdown document will include a description of the dataset, detailed data 
 ```{r}
 #| message: false
 #| warning: false
-library(tidyr)
-library(dplyr)
-library(readr)
 library(janitor)
-library(forcats)
+library(tidyverse)
 ```
 
 ## 1. Description of Dataset
@@ -54,13 +51,13 @@ The variables for the "-matches.csv" files are as follows:
 | Pl 1 hand | Categorical | Handed for Player 1 |
 | Pl 2 hand | Categorical | Handed for Player 2 |
 | Date | Numerical | Currently stored as YYYYMMDD integer. |
-| Tournament | Categorical | Name of Tournament |
-| Round | Categorical | Round of the Tournament (i.e. F, SF, R64, etc.) |
+| Tournament | Categorical | Name of Tournament. Delete later. |
+| Round | Categorical | Round of the Tournament (i.e. F, SF, R64, etc.).  Delete later |
 | Time | Categorical | Many missing values and inconsistent formatting. Delete later. |
 | Court | Categorical | Name/number of court. Many missing values. Delete later. |
 | Surface | Categorical | Hard, Clay or Grass |
 | Umpire | Categorical | Name of umpire. Many missing values. Delete later. |
-| Best of | Numerical | Best of 3 or Best of 5. |
+| Best of | Numerical | Best of 3 or Best of 5. Delete later.|
 | Final TB? | Categorical | Meaning unclear. Delete later. |
 | Charted by | Categorical | Name of data contributer. Delete later. |
 
@@ -78,7 +75,7 @@ The variables for the "-Overview.csv" files are as follows:
 | first_won | Numerical | First serve points won |
 | second_in | Numerical | Second serves in play |
 | second_won | Numerical | Second serve points won |
-| bk_pts | Numerical | Break points won |
+| bk_pts | Numerical | Break points faced |
 | bp_saved | Numerical | Break points saved |
 | return_pts | Numerical | Points returned |
 | return_pts_won | Numerical | Return points won |
@@ -203,12 +200,78 @@ CombinedData <- CombinedData |>
          unforced_bh_pct = unforced_bh / total_pts) # percentage of points ending in backhand unforced error
 ```
 
-
 4.  Confirm correct format/type for all variables
 
+- Lets look for any remaining possible data issues. Use summary() to evaluate all variables.
+```{r}
+summary(CombinedData)
+```
 
+- "surface" is showing 4 unique levels.  3 is expected.  Find and correct the error.
 
+```{r}
+unique(CombinedData$surface) # check unique elements of surface
+```
 
+```{r}
+# Filer to exclude that particular row.  Keep NA rows. 
+CombinedData <- CombinedData |> filter(surface != "Eva Asderaki-Moore" | is.na(surface))
+```
+
+- "handed" is showing 3 unique levels.  2 is expected.  Find and correct the error.
+
+```{r}
+unique(CombinedData$handed) # check unique elements of handed
+```
+```{r}
+# Correct "l" to "L"
+CombinedData <- CombinedData |> mutate(handed = toupper(handed))
+```
+
+- NA values for the "pct_" variables are expected, as the denominator for the calculation may at times be zero.
+
+- "tournament" "round" and "best_of" are no longer desired.  Delete these.
+
+```{r}
+CombinedData <- CombinedData |>
+  select(-tournament,
+         -round,
+         -best_of)
+```
+
+- Convert "date" variable to "year".  For the purpose of this analysis, there is no need for any detail beyond the year.
+
+```{r}
+CombinedData <- CombinedData |>
+  mutate(year = as.numeric(substr(as.character(date), 1, 4))) |> # convert "date" to a string, keep only the first four characters, then convert back to number
+  select(-date) # remove "date"
+```
+
+- Convert select categorical variables to factors:  "tour" "surface" "handed"
+
+```{r}
+CombinedData <- CombinedData |>
+  mutate(tour = factor(tour),
+         surface = factor(surface),
+         handed = factor(handed))
+```
+
+- Delete large items from the environment that are no longer needed
+
+```{r}
+rm(M_Data,
+   M_Matches,
+   M_Overview,
+   W_Data,
+   W_Matches,
+   W_Overview)
+```
+
+- Now save the cleaned data as an .rds file that can be read by the Shiny app later
+
+```{r}
+saveRDS(CombinedData, "CombinedData.rds")
+```
 
 ## 3. EDA Summary Tables
 
