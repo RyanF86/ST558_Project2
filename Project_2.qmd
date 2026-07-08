@@ -11,11 +11,13 @@ This markdown document will include a description of the dataset, detailed data 
 #| warning: false
 library(janitor)
 library(tidyverse)
+library(knitr)
+library(gt)
 ```
 
 ## 1. Description of Dataset
 
-The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <https://github.com/JeffSackmann/tennis_MatchChartingProject.git>. The MCP aims to build a detailed public record of professional tennis matches. MCP data covers over 11,000 singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the summary data.
+The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <https://github.com/JeffSackmann/tennis_MatchChartingProject.git>. The MCP aims to build a detailed public record of professional tennis matches. MCP data covers over 11,000 singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the summary data.  Note:  This is not a comprehensive dataset of all professional tennis matches. Because charting is done by individual volunteer contributors, the data tends to over-represent the biggest tournaments and the most popular players.
 
 Four raw data .csv files are downloaded from the GitHub repo and placed in `RawData/`:
 
@@ -52,7 +54,7 @@ The variables for the "-matches.csv" files are as follows:
 | Pl 2 hand | Categorical | Handed for Player 2 |
 | Date | Numerical | Currently stored as YYYYMMDD integer. |
 | Tournament | Categorical | Name of Tournament. Delete later. |
-| Round | Categorical | Round of the Tournament (i.e. F, SF, R64, etc.).  Delete later |
+| Round | Categorical | Round of the Tournament (i.e. F, SF, R64, etc.). |
 | Time | Categorical | Many missing values and inconsistent formatting. Delete later. |
 | Court | Categorical | Name/number of court. Many missing values. Delete later. |
 | Surface | Categorical | Hard, Clay or Grass |
@@ -228,14 +230,28 @@ unique(CombinedData$handed) # check unique elements of handed
 CombinedData <- CombinedData |> mutate(handed = toupper(handed))
 ```
 
+- "round" has some unexpected and uncommon values.  Review and trim appropriately
+
+```{r}
+print(rows=14, CombinedData |> 
+  drop_na(round) |>
+  group_by(round) |>
+  summarize(count = n())) # get counts of all 14 levels of round
+```
+
+```{r}
+# Drop PO and PQ as they are very uncommon.  Keep NA
+CombinedData <- CombinedData |>
+  filter(!round %in% c("BR", "PO", "PQ") | is.na(round))
+```
+
 - NA values for the "pct_" variables are expected, as the denominator for the calculation may at times be zero.
 
-- "tournament" "round" and "best_of" are no longer desired.  Delete these.
+- "tournament" and "best_of" are no longer desired.  Delete these.
 
 ```{r}
 CombinedData <- CombinedData |>
   select(-tournament,
-         -round,
          -best_of)
 ```
 
@@ -247,13 +263,16 @@ CombinedData <- CombinedData |>
   select(-date) # remove "date"
 ```
 
-- Convert select categorical variables to factors:  "tour" "surface" "handed"
+- Convert select categorical variables to factors:  "tour" "surface" "handed" and "round"
 
 ```{r}
 CombinedData <- CombinedData |>
   mutate(tour = factor(tour),
          surface = factor(surface),
-         handed = factor(handed))
+         handed = factor(handed),
+         round = factor(round,
+                        levels = c("Q1","Q2","Q3","R128","R64","R32","R16","QF","RR","SF","F"),
+                        ordered = TRUE)) # putting the levels of round in logical order based on proximity to winning the tournament
 ```
 
 - Delete large items from the environment that are no longer needed
@@ -274,5 +293,83 @@ saveRDS(CombinedData, "CombinedData.rds")
 ```
 
 ## 3. EDA Summary Tables
+
+- Create a one-way contingency table for "handed" "tour" "surface" and "round" variables
+
+```{r}
+kable(CombinedData |> 
+  drop_na(handed) |>
+  group_by(handed) |>
+  summarize(count = n()))
+# Right-handed players are more commonly observed in the dataset than left handed players by about 8.5:1 
+
+kable(CombinedData |> 
+  drop_na(tour) |>
+  group_by(tour) |>
+  summarize(count = n()))
+# The dataset includes nearly twice as many matches from the Men's tour than the Women's tour
+
+kable(CombinedData |> 
+  drop_na(surface) |>
+  group_by(surface) |>
+  summarize(count = n()))
+# Clay courts represent about twice as many matches in the dataset as Grass courts.
+# Hard courts represent nearly 3 times as many matches in the dataset as Clay courts.
+
+kable(CombinedData |> 
+  drop_na(round) |>
+  group_by(round) |>
+  summarize(count = n()))
+# In a standard single-elimination tournament, there is 1 F match, 2 SF matches, 4 QF matches, etc.
+# However, this dataset includes roughly equal counts (~3,000 each) of F, SF, and QF 
+# This confirms the suspected sampling bias towards higher-profile matches
+```
+
+- Create a two-way contingency table for surface vs tour and handed vs tour
+
+```{r}
+#| message: false
+kable(CombinedData |>
+        drop_na(handed, tour) |>
+        group_by(handed, tour) |>
+        summarize(count = n()) |>
+        pivot_wider(names_from = tour, values_from = count))
+# Left-handed players are the minority on both tours, with men's tennis showing a slightly higher share
+
+kable(CombinedData |> 
+        drop_na(surface, tour) |>
+        group_by(surface, tour) |>
+        summarize(count = n()) |>
+        pivot_wider(names_from = tour, values_from = count))
+# Hard courts are most popular, and there do not appear to be any notable differences in surface proportions between the two tours
+```
+
+- Find measures of center and spread for ace_pct and serve_pts_won_pct by tour
+
+```{r}
+CombinedData |>
+  group_by(tour) |>
+  summarize(across(.cols = c(ace_pct, serve_pts_won_pct),
+                   list("mean" = ~ mean(.x, na.rm = TRUE),
+                        "median" = ~ median(.x, na.rm = TRUE),
+                        "sd" = ~ sd(.x, na.rm = TRUE),
+                        "Q1" = ~ quantile(.x, 0.25, na.rm = TRUE),
+                        "Q3" = ~ quantile(.x, 0.75, na.rm = TRUE)),
+                   .names = "{.fn}.{.col}")) |> # creates names from the variable and the statistic
+  pivot_longer(
+    cols = -tour, # exclude tour from the pivot
+    names_to = c("Statistic", "Variable"),
+    names_sep = "\\.") |>
+  pivot_wider(
+    names_from = Statistic,
+    values_from = value) |>
+  gt(groupname_col = "tour", rowname_col = "Variable") |> # organizes the Variable column by tour and removes the "Variable" title
+  fmt_number(decimals = 3) |> # rounds everything to 3 decimals
+  tab_header(
+    title = "Ace Percentage and Serve Points Won Percentage: Mean, Median, SD, Q1, and Q3",
+    subtitle = "Stratified by tour"
+  )
+```
+
 
 ## 4. EDA Plots
