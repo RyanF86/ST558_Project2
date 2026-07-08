@@ -13,6 +13,7 @@ library(janitor)
 library(tidyverse)
 library(knitr)
 library(gt)
+source("helpers.R")
 ```
 
 ## 1. Description of Dataset
@@ -407,3 +408,78 @@ CombinedData |>
 
 ## 4. EDA Plots
 
+- Create a bar chart for surface
+
+```{r}
+g <- ggplot(data = CombinedData |> drop_na(surface), aes(x = surface, fill = surface))
+g + geom_bar() +
+    labs(x = var_labels[["surface"]], # reference corresponding label
+         title = paste("Count of Charted Matches by", var_labels[["surface"]])) + 
+  theme(plot.title = element_text(hjust = 0.5), # centering the title
+        legend.position = "none") # remove redundant legend
+# The majority of matches in the dataset are played on hard court, followed by clay and then grass.
+```
+
+- Create a side-by-side bar chart for tour and handed
+
+```{r}
+g <- ggplot(data = CombinedData |> drop_na(tour, handed), aes(x = tour, fill = handed))
+g + geom_bar(position = "dodge") +
+    labs(x = var_labels[["tour"]], 
+         title = paste("Count of Charted Matches by", var_labels[["tour"]], "and", var_labels[["handed"]])) + 
+  scale_fill_discrete(var_labels[["handed"]]) +
+  theme(plot.title = element_text(hjust = 0.5))
+# Right-handed players outnumber left-handed players, with no notable difference in representation between Men's and Women's tours
+```
+
+- Create a histogram for year, faceted by tour
+
+```{r}
+g <- ggplot(CombinedData |> drop_na(year, tour), aes(x = year))
+g + geom_histogram(binwidth = 5, alpha = .5, aes(fill = tour)) + 
+  facet_wrap(~ tour) +
+  labs(x = var_labels[["year"]],
+       fill = var_labels[["tour"]],
+       title = paste("Charted Match", var_labels[["year"]]),
+       subtitle = paste("Faceted by", var_labels[["tour"]])) + 
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5), # Centers the title and subtitle
+        legend.position = "none") # remove redundant legend
+# The majority of matches in the dataset are from the early 2010's and later
+# Overall, there are more men's matches than women's matches by about 2:1
+# However prior to the 2010's, men's matches outnumber women's matches by more than
+# Note: this data is only representative of the specific matches charted in the dataset (i.e. not a comprehensive representation of the history of professional tennis)
+```
+
+- Create a side-by-side box plot for return_pts_won_pct by surface
+
+```{r}
+g <- ggplot(CombinedData |> drop_na(return_pts_won_pct, surface))
+g + geom_boxplot(aes(x = surface, y = return_pts_won_pct, fill = surface)) +
+  labs(x = var_labels[["surface"]], # reference corresponding label for surface
+       y = var_labels[["return_pts_won_pct"]],
+       title = paste(var_labels[["return_pts_won_pct"]], "by", var_labels[["surface"]])) + 
+  theme(plot.title = element_text(hjust = 0.5), # Centers the title
+        legend.position = "none") # remove redundant legend
+# The data indicates that Winning return points is more difficult on grass and less difficult on clay.
+# This aligns with expectations.  Clay courts have high and slower bounces while grass courts have low and skidding bounces, affecting return difficulty.
+```
+
+- Create a scatter plot for winners_pct vs unforced_pct by tour
+
+```{r}
+g <- ggplot(CombinedData |>
+              drop_na(winner_pct, unforced_pct, tour),
+            aes(x = winner_pct, y = unforced_pct, color = tour))
+g + geom_point(alpha = 0.5, size = 0.9) + 
+  labs(x = var_labels[["winner_pct"]],
+       y = var_labels[["unforced_pct"]],
+       title = paste(var_labels[["unforced_pct"]], "vs", var_labels[["winner_pct"]], "by", var_labels[["tour"]]),
+       color = var_labels[["tour"]]) + 
+  theme(plot.title = element_text(hjust = 0.5)) # Centers the title
+# The men's tour tends to have a slightly higher percentage of points ending in winners than the women's tour
+# This is likely in large part due to an increased frequency of aces (which are counted as winners in tennis statistics)
+# There is no obvious different in percentage of points ending in unforced errors.
+```
+
+- Create a radar plot for Rafael Nadal vs John Isner comparing total_won_pct, serve_pts_won_pct, return_pts_won_pct, ace_pct, winner_fh_pct, unforced_fh_pct, winner_bh_pct, unforced_bh_pct

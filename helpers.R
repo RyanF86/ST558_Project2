@@ -1,0 +1,46 @@
+var_labels <- c(
+  # Categorical / identifier
+  player             = "Player",
+  tour               = "Tour",
+  surface            = "Court Surface",
+  round              = "Tournament Round",
+  handed             = "Handedness",
+  year               = "Year",
+  
+  # Raw count stats
+  serve_pts          = "Serve Points",
+  aces               = "Aces",
+  dfs                = "Double Faults",
+  first_in           = "First Serves In",
+  first_won          = "First Serve Points Won",
+  second_in          = "Second Serves In",
+  second_won         = "Second Serve Points Won",
+  bk_pts             = "Break Points Faced",
+  bp_saved           = "Break Points Saved",
+  return_pts         = "Return Points",
+  return_pts_won     = "Return Points Won",
+  winners            = "Winners",
+  winners_fh         = "Forehand Winners",
+  winners_bh         = "Backhand Winners",
+  unforced           = "Unforced Errors",
+  unforced_fh        = "Forehand Unforced Errors",
+  unforced_bh        = "Backhand Unforced Errors",
+  total_pts          = "Total Points",
+  
+  # Derived percentage stats
+  first_in_pct       = "First Serve In %",
+  ace_pct            = "Ace %",
+  first_won_pct      = "First Serve Points Won %",
+  second_won_pct     = "Second Serve Points Won %",
+  total_won_pct      = "Total Points Won %",
+  df_pct             = "Double Fault %",
+  bp_saved_pct       = "Break Points Saved %",
+  serve_pts_won_pct  = "Serve Points Won %",
+  return_pts_won_pct = "Return Points Won %",
+  winner_pct         = "Winner %",
+  unforced_pct       = "Unforced Error %",
+  winner_fh_pct      = "Forehand Winner %",
+  winner_bh_pct      = "Backhand Winner %",
+  unforced_fh_pct    = "Forehand Unforced Error %",
+  unforced_bh_pct    = "Backhand Unforced Error %"
+)
