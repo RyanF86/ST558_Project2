@@ -348,6 +348,7 @@ kable(CombinedData |>
 
 ```{r}
 CombinedData |>
+  drop_na(tour) |>
   group_by(tour) |>
   summarize(across(.cols = c(ace_pct, serve_pts_won_pct),
                    list("mean" = ~ mean(.x, na.rm = TRUE),
@@ -367,9 +368,42 @@ CombinedData |>
   fmt_number(decimals = 3) |> # rounds everything to 3 decimals
   tab_header(
     title = "Ace Percentage and Serve Points Won Percentage: Mean, Median, SD, Q1, and Q3",
-    subtitle = "Stratified by tour"
-  )
+    subtitle = "Stratified by tour")
+# This table illustrates the greater weight of serve performance on the Men's tour vs the Women's tour.
+# Mean ace percentage is roughly double on the Men's tour (8.4% vs 4.2%).
+# On the Men's tour, even the bottom quartile wins most serve points (Q1 = 58.2%), a clear serve advantage.
+# On the Women's tour, the bottom quartile is near break-even (Q1 = 50.7%), so the serve advantage nearly vanishes for lower-serving performances.
 ```
 
+- Find measures of center and spread for winner_pct and unforced_pct by round
+
+```{r}
+CombinedData |>
+  drop_na(round) |>
+  group_by(round) |>
+  summarize(across(.cols = c(winner_pct, unforced_pct),
+                   list("mean" = ~ mean(.x, na.rm = TRUE),
+                        "median" = ~ median(.x, na.rm = TRUE),
+                        "sd" = ~ sd(.x, na.rm = TRUE),
+                        "Q1" = ~ quantile(.x, 0.25, na.rm = TRUE),
+                        "Q3" = ~ quantile(.x, 0.75, na.rm = TRUE)),
+                   .names = "{.fn}.{.col}")) |> # creates names from the variable and the statistic
+  pivot_longer(
+    cols = -round, # exclude round from the pivot
+    names_to = c("Statistic", "Variable"),
+    names_sep = "\\.") |>
+  pivot_wider(
+    names_from = Statistic,
+    values_from = value) |>
+  gt(groupname_col = "round", rowname_col = "Variable") |> # organizes the Variable column by round and removes the "Variable" title
+  fmt_number(decimals = 3) |> # rounds everything to 3 decimals
+  tab_header(
+    title = "Winner Percentage and Unforced Error Percentage: Mean, Median, SD, Q1, and Q3",
+    subtitle = "Stratified by round")
+# This table examines whether play "quality" shifts from qualifying rounds through the final.
+# Winner percentage rises gradually from qualifying (~14%) to a plateau around the QF-SF (~16.7%).
+# Unforced error percentage drifts slightly downward, from ~19% in qualifying to ~17.4-17.9% in later rounds.
+```
 
 ## 4. EDA Plots
+
