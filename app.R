@@ -13,7 +13,11 @@ library(shinyalert)
 library(DT) # for interactive data tables
 
 # helpers.R contains names of variables, useful functions, and other items
+# also helpers.R reads CombinedData.rds
 source("helpers.R")
+
+# start with full sample
+mysample <- CombinedData
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -61,16 +65,30 @@ ui <- fluidPage(
                    tabPanel("Categorical Summaries",
                             selectizeInput(inputId = "categorical_first", label = "First Categorical Variable", choices = categorical_vars, selected = "tour"),
                             selectizeInput(inputId = "categorical_second", label = "Second Categorical Variable", choices = c("None", categorical_vars), selected = "None")
+                            # Display Bar Graph (for 1 categorical)
+                            # Display Side-By-Side Bar Graph (for 2 categorical)
+                            # Display Contingency Table (for 1 categorical)
+                            # Display Two-Way Contingency Table (for 2 categorical)
                             ),
                    tabPanel("Numeric Summaries",
                             selectizeInput(inputId = "numeric_first", label = "First Numeric Variable", choices = numeric_vars, selected = "year"),
                             selectizeInput(inputId = "numeric_second", label = "Second Numeric Variable", choices = c("None", numeric_vars), selected = "None"),
-                            selectizeInput(inputId = "numeric_group_by", label = "Group By Variable", choices = c("None", categorical_vars), selected = "None"),                           
+                            selectizeInput(inputId = "numeric_group_by", label = "Group By Variable", choices = c("None", categorical_vars), selected = "None"),
+                            # Display Box Plot (for 1 numerical)
+                            # Display Histogram (for 1 numerical)
+                            # Display Scatter Plot (for 2 numerical)
+                            # Display Numeric Summary
                             ),
                    
-                   tabPanel("Player Comparison",
-                            selectizeInput(inputId = "first_player", label = "First Player", choices = eligible_players, selected = "Roger Federer"))
-                   
+                   tabPanel("Player Comparison", # since there are so many options for the player dropdown, this will be updated on the server side insead
+                            selectizeInput(inputId = "first_player", label = "First Player", choices = NULL),
+                            selectizeInput(inputId = "second_player", label = "Second Player", choices = NULL)
+                            # Check for either player with n=0
+                            # Display Radar Chart
+                            # Display Player Metrics Table
+                            # Warning if n is small
+                            )
+                            
                  )
         )
       )
@@ -102,6 +120,19 @@ server <- function(input, output, session) {
                 value = c(rng$min, rng$max),
                 step = rng$step)
   })
+  
+  # Update selectize for player selection, done on server due to qty of items.
+  updateSelectizeInput(session, "first_player",
+                       choices = eligible_players,
+                       selected = "Roger Federer",
+                       server = TRUE,
+                       options = list(maxOptions = 2000))
+  
+  updateSelectizeInput(session, "second_player",
+                       choices = c("None", eligible_players),
+                       selected = "None",
+                       server = TRUE,
+                       options = list(maxOptions = 2000))
 
 }
 

@@ -190,7 +190,7 @@ CombinedData <- readRDS("CombinedData.rds")
 # Make list of eligible players for comparison (must have at least 10 matches)
 eligible_players <- CombinedData |>
   count(player) |>
-  filter(n >= 10) |>
+  filter(n >= 1) |> # currently allowing all players regardless of matches, but may reconsider
   pull(player) |>
   sort()
 
