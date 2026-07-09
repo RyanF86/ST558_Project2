@@ -187,7 +187,7 @@ slider_ranges <- list(
 # Load .rds data
 CombinedData <- readRDS("CombinedData.rds")
 
-# Make list of eligible players for comparison (must have at least 10 matches)
+# Make list of eligible players for comparison 
 eligible_players <- CombinedData |>
   count(player) |>
   filter(n >= 1) |> # currently allowing all players regardless of matches, but may reconsider

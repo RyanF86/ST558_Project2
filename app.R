@@ -16,9 +16,6 @@ library(DT) # for interactive data tables
 # also helpers.R reads CombinedData.rds
 source("helpers.R")
 
-# start with full sample
-mysample <- CombinedData
-
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -45,14 +42,14 @@ ui <- fluidPage(
       uiOutput("slider_second"),
       br(),
       # action button to get the sample
-      actionButton("corr_sample","Get a Sample!")
+      actionButton("sample_btn","Subset the Data!")
     ),
     mainPanel(
       tabsetPanel(
         id = "main_tabs",
         
         tabPanel("About",
-                
+
         ),
         
         tabPanel("Data Download",
@@ -64,9 +61,11 @@ ui <- fluidPage(
                  tabsetPanel(
                    tabPanel("Categorical Summaries",
                             selectizeInput(inputId = "categorical_first", label = "First Categorical Variable", choices = categorical_vars, selected = "tour"),
-                            selectizeInput(inputId = "categorical_second", label = "Second Categorical Variable", choices = c("None", categorical_vars), selected = "None")
+                            selectizeInput(inputId = "categorical_second", label = "Second Categorical Variable", choices = c("None", categorical_vars), selected = "None"),
                             # Display Bar Graph (for 1 categorical)
+                            plotOutput("bar_one"),
                             # Display Side-By-Side Bar Graph (for 2 categorical)
+                            plotOutput("bar_two")
                             # Display Contingency Table (for 1 categorical)
                             # Display Two-Way Contingency Table (for 2 categorical)
                             ),
@@ -75,8 +74,11 @@ ui <- fluidPage(
                             selectizeInput(inputId = "numeric_second", label = "Second Numeric Variable", choices = c("None", numeric_vars), selected = "None"),
                             selectizeInput(inputId = "numeric_group_by", label = "Group By Variable", choices = c("None", categorical_vars), selected = "None"),
                             # Display Box Plot (for 1 numerical)
+                            plotOutput("box"),
                             # Display Histogram (for 1 numerical)
+                            plotOutput("histogram"),
                             # Display Scatter Plot (for 2 numerical)
+                            plotOutput("scatter"),
                             # Display Numeric Summary
                             ),
                    
@@ -96,7 +98,8 @@ ui <- fluidPage(
   )
 )
 
-
+#initialize mysubset with everything
+mysubset <- CombinedData
 
 # Define server logic
 server <- function(input, output, session) {
@@ -120,6 +123,32 @@ server <- function(input, output, session) {
                 value = c(rng$min, rng$max),
                 step = rng$step)
   })
+  
+  # Create subset on sample_btn
+  mysubset <- eventReactive(input$sample_btn,{
+    
+    # Radio inputs
+    if(input$tour_subset == "all") {tour_vals = c("M", "W")}
+    else {tour_vals = input$tour_subset}
+    if(input$handed_subset == "all") {handed_vals = c("R", "L")}
+    else {handed_vals = input$handed_subset}    
+    
+    # subset 
+    mysubset <- CombinedData |>
+      filter(tour %in% tour_vals,
+             handed %in% handed_vals,
+             surface %in% input$surface_subset, # checkbox input for surface
+             round_group %in% input$round_subset, # checkbox input for round_group
+             .data[[input$num_subset_first]]  >= input$range_first[1],
+             .data[[input$num_subset_first]]  <= input$range_first[2],
+             .data[[input$num_subset_second]] >= input$range_second[1],
+             .data[[input$num_subset_second]] <= input$range_second[2]
+             )
+
+  })
+  
+  #
+  output$data_table <- renderDataTable(mysubset())
   
   # Update selectize for player selection, done on server due to qty of items.
   updateSelectizeInput(session, "first_player",
