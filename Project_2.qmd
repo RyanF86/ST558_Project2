@@ -9,7 +9,7 @@ This markdown document will include a description of the dataset, detailed data 
 ```{r}
 #| message: false
 #| warning: false
-library(janitor)
+library(janitor) # for clean_names()
 library(tidyverse)
 library(knitr)
 library(gt)
@@ -277,7 +277,10 @@ CombinedData <- CombinedData |>
          handed = factor(handed),
          round = factor(round,
                         levels = c("Q1","Q2","Q3","R128","R64","R32","R16","QF","RR","SF","F"),
-                        ordered = TRUE)) # putting the levels of round in logical order based on proximity to winning the tournament
+                        ordered = TRUE), # putting the levels of round in logical order based on proximity to winning the tournament
+         round_group = factor(round_groups[as.character(round)],
+                              levels = round_group_levels,
+                              ordered = TRUE))
 ```
 
 - Delete large items from the environment that are no longer needed
@@ -525,6 +528,7 @@ rownames(radar_bounds) <- c("max", "min")
 
 ```{r}
 # now make a function to build the df that feeds radarchart()
+# this will also live in helpers.R
 build_radar_data <- function(data, player_a, player_b) {
   player_rows <- data |> # getting the player data
     filter(player %in% c(player_a, player_b)) |> # select the two players
@@ -539,7 +543,7 @@ build_radar_data <- function(data, player_a, player_b) {
   
   
   out <- rbind(radar_bounds, player_rows) # combine the variable min/max with the player data into one data frame
-  colnames(out) <- radar_labels[colnames(out)] # uses the proper variable labels from var_labels
+  colnames(out) <- radar_labels[colnames(out)] # uses the proper variable labels from radar_labels in helpers.R
   out # return out
 }
 
@@ -570,7 +574,8 @@ legend("topright", # build legend in top right
 ```
 ```{r}
 # In the dashboard, it would be good to have a table of this data below the radarchart
-# Create a function to build this radar chart companion table
+# Create a function to build this radar chart companion table 
+# this will also live in helpers.R
 build_radar_table <- function(data, player_a, player_b) {
   data |>
     filter(player %in% c(player_a, player_b)) |> # filters for the two players
