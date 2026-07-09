@@ -13,6 +13,7 @@ library(janitor)
 library(tidyverse)
 library(knitr)
 library(gt)
+library(fmsb) # for radarchart()
 source("helpers.R")
 ```
 
@@ -200,7 +201,10 @@ CombinedData <- CombinedData |>
          winner_fh_pct = winners_fh / total_pts, # percentage of points ending in forehand winner
          winner_bh_pct = winners_bh / total_pts, # percentage of points ending in backhand winner
          unforced_fh_pct = unforced_fh / total_pts, # percentage of points ending in forehand unforced error
-         unforced_bh_pct = unforced_bh / total_pts) # percentage of points ending in backhand unforced error
+         unforced_bh_pct = unforced_bh / total_pts, # percentage of points ending in backhand unforced error
+         fh_eff_pct = winner_fh_pct - unforced_fh_pct, # a measure of forehand effectiveness
+         bh_eff_pct = winner_bh_pct - unforced_bh_pct, # a measure of backhand effectiveness
+         aggression_pct = winner_pct + unforced_pct) # a measure of overall aggression
 ```
 
 4.  Confirm correct format/type for all variables
@@ -482,4 +486,104 @@ g + geom_point(alpha = 0.5, size = 0.9) +
 # There is no obvious different in percentage of points ending in unforced errors.
 ```
 
-- Create a radar plot for Rafael Nadal vs John Isner comparing total_won_pct, serve_pts_won_pct, return_pts_won_pct, ace_pct, winner_fh_pct, unforced_fh_pct, winner_bh_pct, unforced_bh_pct
+- Create a radar chart for Rafael Nadal vs John Isner comparing means for the following variables: total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct, aggression_pct, fh_eff_pct, and bf_eff_pct
+
+```{r}
+
+# first let's create a new table containing the means of the variables of interest, grouped by player
+player_means <- CombinedData |>
+  group_by(player) |>
+  summarize(across(c(total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,
+                     aggression_pct, fh_eff_pct, bh_eff_pct),
+                   ~ mean(.x, na.rm = TRUE)), # calculates the mean of each variable by player
+            n = n()) # adds n, the qty of matches per player 
+
+# radarchart() will need to know the min and max of each variable for scaling purposes, so let's take a look
+summary(player_means)
+```
+```{r}
+# there are some outlier values here, most likely due to low n for those players
+# let's revisit while filtering out players with less than 10 matches observed
+player_means |> filter(n >= 10) |> summary()
+```
+```{r}
+# the above provides a much more reasonable picture
+# now we can manually construct a radar_bounds dataframe, rounding where desired
+# this code will also exist in helpers.R for use later
+
+radar_bounds <- data.frame(
+  total_won_pct      = c(0.60, 0.40),
+  ace_pct            = c(0.25, 0.00),
+  serve_pts_won_pct  = c(0.75, 0.45),
+  return_pts_won_pct = c(0.55, 0.20),
+  aggression_pct     = c(0.50, 0.20),
+  fh_eff_pct         = c(0.05, -0.08),
+  bh_eff_pct         = c(0.03, -0.10)
+)
+rownames(radar_bounds) <- c("max", "min")
+```
+
+```{r}
+# now make a function to build the df that feeds radarchart()
+build_radar_data <- function(data, player_a, player_b) {
+  player_rows <- data |> # getting the player data
+    filter(player %in% c(player_a, player_b)) |> # select the two players
+    group_by(player) |>
+    summarize(across(c(total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,
+                       aggression_pct, fh_eff_pct, bh_eff_pct),
+                     ~ mean(.x, na.rm = TRUE))) |> # calculating the means of each variable for each player
+    as.data.frame() # radarchart() needs data.frame format
+  
+  rownames(player_rows) <- player_rows$player # add the players as row names, which is how radarchart() will get these labels
+  player_rows$player <- NULL # column of player names no longer needed
+  
+  
+  out <- rbind(radar_bounds, player_rows) # combine the variable min/max with the player data into one data frame
+  colnames(out) <- radar_labels[colnames(out)] # uses the proper variable labels from var_labels
+  out # return out
+}
+
+# run function for the two players of interest
+radardata<-build_radar_data(player_means, "Rafael Nadal", "John Isner")
+radardata
+```
+
+```{r}
+par(mar = c(1, 1, 1, 1)) # narrow margins for less white space
+radarchart(radardata,
+           vlcex = 0.8, # scales label text size
+           pcol = c("red", "blue"), # applies colors
+           pfcol = c(adjustcolor("red", alpha.f = 0.3), # applies fill colors with transparency
+                     adjustcolor("blue", alpha.f = 0.3)), 
+           plwd = 2, # line width
+           plty = 1, # solid lines
+           cglcol = "grey", # grid line color
+           cglty = 1, # solid grid line
+           cglwd = 0.5, # grid line width
+           title = "Mean Metrics Across All Charted Matches")
+legend("topright", # build legend in top right
+       legend = rownames(radardata)[-c(1, 2)],   # drop max/min rows
+       col = c("red", "blue"), # legend colors
+       lwd = 4, # legend line width
+       bty = "n", # remove legend border box
+       cex = 0.8) # scale legend text size
+```
+```{r}
+# In the dashboard, it would be good to have a table of this data below the radarchart
+# Create a function to build this radar chart companion table
+build_radar_table <- function(data, player_a, player_b) {
+  data |>
+    filter(player %in% c(player_a, player_b)) |> # filters for the two players
+    select(player, n, total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,
+           aggression_pct, fh_eff_pct, bh_eff_pct) |> # selects all the radar chart variables, and also n
+    rename_with(~ var_labels[.x], .cols = -c(player, n)) |> # use var_labels for renaming all variables except n and player
+    rename(Player = player, `Charted Matches` = n) # manually renaming n and player
+}
+
+build_radar_table(player_means, "Rafael Nadal", "John Isner") |>
+  gt() |>
+  fmt_number(columns = -c(Player, `Charted Matches`), decimals = 3) |>
+  tab_header(title = "Mean Player Metrics",
+             subtitle = "Across All Charted Matches") 
+```
+
