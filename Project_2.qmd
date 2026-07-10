@@ -278,7 +278,7 @@ CombinedData <- CombinedData |>
          round = factor(round,
                         levels = c("Q1","Q2","Q3","R128","R64","R32","R16","QF","RR","SF","F"),
                         ordered = TRUE), # putting the levels of round in logical order based on proximity to winning the tournament
-         round_group = factor(round_groups[as.character(round)],
+         round_group = factor(round_group[as.character(round)],
                               levels = round_group_levels,
                               ordered = TRUE))
 ```

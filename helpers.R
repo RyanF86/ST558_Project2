@@ -41,7 +41,8 @@ var_labels <- c(
   unforced_bh_pct    = "Backhand Unforced Error %",
   fh_eff_pct         = "Forehand Effectiveness %",
   bh_eff_pct         = "Backhand Effectiveness %",
-  aggression_pct     = "Aggression %"
+  aggression_pct     = "Aggression %",
+  round_group        = "Round Group"
 )
 
 # truncated labels just for the radar chart 
@@ -143,11 +144,11 @@ categorical_vars <- c(
   "Court Surface" = "surface",
   "Handedness"    = "handed",
   "Round"         = "round",
-  "Round Groups"  = "round_groups"
+  "Round Group"  = "round_group"
 )
 
 # condense 11 levels of round down to 4
-round_groups <- c(
+round_group <- c(
   "Q1"   = "Qualifying",
   "Q2"   = "Qualifying",
   "Q3"   = "Qualifying",

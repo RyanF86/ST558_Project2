@@ -63,9 +63,15 @@ ui <- fluidPage(
                             selectizeInput(inputId = "categorical_first", label = "First Categorical Variable", choices = categorical_vars, selected = "tour"),
                             selectizeInput(inputId = "categorical_second", label = "Second Categorical Variable", choices = c("None", categorical_vars), selected = "None"),
                             # Display Bar Graph (for 1 categorical)
-                            plotOutput("bar_one"),
+                            conditionalPanel(
+                              condition = "input.categorical_second == 'None'",
+                              plotOutput("bar_one")
+                            ),
                             # Display Side-By-Side Bar Graph (for 2 categorical)
-                            plotOutput("bar_two")
+                            conditionalPanel(
+                              condition = "input.categorical_second != 'None'",
+                              plotOutput("bar_two")
+                            )
                             # Display Contingency Table (for 1 categorical)
                             # Display Two-Way Contingency Table (for 2 categorical)
                             ),
@@ -147,8 +153,17 @@ server <- function(input, output, session) {
 
   })
   
-  #
+  # Data Table
   output$data_table <- renderDataTable(mysubset())
+  
+  # Download Data
+  output$download_data <- downloadHandler(
+    filename = "download.csv",
+    content = function(file) {
+      # Write the dataset to the `file` that will be downloaded
+      write.csv(mysubset(), file)
+    }
+  )  
   
   # Update selectize for player selection, done on server due to qty of items.
   updateSelectizeInput(session, "first_player",
@@ -162,7 +177,32 @@ server <- function(input, output, session) {
                        selected = "None",
                        server = TRUE,
                        options = list(maxOptions = 2000))
-
+  
+  # Bar Plot, Single Variable
+  output$bar_one <- renderPlot({
+    req(input$categorical_second == "None") # only proceed if second variable is none
+    ggplot(data = mysubset() |> drop_na(.data[[input$categorical_first]]), 
+           aes(x = .data[[input$categorical_first]], 
+               fill = .data[[input$categorical_first]])) +
+      geom_bar() +
+      labs(x = var_labels[[input$categorical_first]], # reference corresponding label
+           title = paste("Count of Charted Matches by", var_labels[[input$categorical_first]])) + 
+      theme(plot.title = element_text(hjust = 0.5), # centering the title
+            legend.position = "none") # remove redundant legend
+  })
+  
+  # Side-By-Side Bar Plot
+  output$bar_two <- renderPlot({
+    req(input$categorical_second != "None") # only proceed if second variable is selected
+    ggplot(data = mysubset() |> drop_na(.data[[input$categorical_first]], .data[[input$categorical_second]]), 
+           aes(x = .data[[input$categorical_first]], 
+               fill = .data[[input$categorical_second]])) +
+    geom_bar(position = "dodge") +
+      labs(x = var_labels[[input$categorical_first]], 
+           title = paste("Count of Charted Matches by", var_labels[[input$categorical_first]], "and", var_labels[[input$categorical_second]])) + 
+      scale_fill_discrete(var_labels[[input$categorical_second]]) +
+      theme(plot.title = element_text(hjust = 0.5))
+  })  
 }
 
 # Run the application 
