@@ -64,12 +64,12 @@ ui <- fluidPage(
                             selectizeInput(inputId = "categorical_second", label = "Second Categorical Variable", choices = c("None", categorical_vars), selected = "None"),
                             # Display Bar Graph (for 1 categorical)
                             conditionalPanel(
-                              condition = "input.categorical_second == 'None'",
+                              condition = "input.categorical_second == 'None' | input.categorical_second == input.categorical_first",
                               plotOutput("bar_one")
                               ),
                             # Display Side-By-Side Bar Graph (for 2 categorical)
                             conditionalPanel(
-                              condition = "input.categorical_second != 'None'",
+                              condition = "input.categorical_second != 'None' && input.categorical_second != input.categorical_first",
                               plotOutput("bar_two")
                               ),
                             # Display Contingency Table (for 1 categorical)
@@ -87,12 +87,22 @@ ui <- fluidPage(
                             selectizeInput(inputId = "numeric_first", label = "First Numeric Variable", choices = numeric_vars, selected = "year"),
                             selectizeInput(inputId = "numeric_second", label = "Second Numeric Variable", choices = c("None", numeric_vars), selected = "None"),
                             selectizeInput(inputId = "numeric_group_by", label = "Group By Variable", choices = c("None", categorical_vars), selected = "None"),
-                            # Display Box Plot (for 1 numerical)
-                            plotOutput("box"),
-                            # Display Histogram (for 1 numerical)
-                            plotOutput("histogram"),
-                            # Display Scatter Plot (for 2 numerical)
-                            plotOutput("scatter"),
+                            # Display Box Plot (for 1 numerical), optional side-by-side
+                            conditionalPanel(
+                              condition = "input.numeric_second == 'None' | input.numeric_second == input.numeric_first",
+                              plotOutput("box")
+                            ),
+                            # Display Histogram (for 1 numerical), optional faceting
+                            conditionalPanel(
+                              condition = "input.numeric_second == 'None' | input.numeric_second == input.numeric_first",
+                              plotOutput("histogram")
+                            ),                            
+                            # Display Scatter Plot (for 2 numerical), optional coloring
+                            conditionalPanel(
+                              condition = "input.numeric_second != 'None' && input.numeric_second != input.numeric_first",
+                              plotOutput("scatter")
+                            ),                            
+
                             # Display Numeric Summary
                             ),
                    
@@ -188,7 +198,7 @@ server <- function(input, output, session) {
   
   # Bar Plot, Single Variable
   output$bar_one <- renderPlot({
-    req(input$categorical_second == "None") # only proceed if second variable is none
+    req(input$categorical_second == "None" | input$categorical_second == input$categorical_first) # proceed if second variable is none -OR- both variables are the same
     ggplot(data = mysubset() |> drop_na(.data[[input$categorical_first]]), 
            aes(x = .data[[input$categorical_first]], 
                fill = .data[[input$categorical_first]])) +
@@ -201,7 +211,7 @@ server <- function(input, output, session) {
   
   # Side-By-Side Bar Plot
   output$bar_two <- renderPlot({
-    req(input$categorical_second != "None") # only proceed if second variable is selected
+    req(input$categorical_second != "None" && input$categorical_second != input$categorical_first) # proceed if second variable is selected -AND- both variables are different
     ggplot(data = mysubset() |> drop_na(.data[[input$categorical_first]], .data[[input$categorical_second]]), 
            aes(x = .data[[input$categorical_first]], 
                fill = .data[[input$categorical_second]])) +
@@ -235,8 +245,92 @@ server <- function(input, output, session) {
       gt(rowname_col = input$categorical_first) |>
       tab_header(title = paste(var_labels[[input$categorical_second]], "by", var_labels[[input$categorical_first]]))
   }) 
-   
+
+  # Box Plot (w/ side-by-side option)
+  output$box <- renderPlot({
+    req(input$numeric_second == "None" | input$numeric_second == input$numeric_first)  # proceed if second variable is none -OR- both variables are the same
+    boxdata <- mysubset() |> drop_na(.data[[input$numeric_first]]) # drop na here, then use boxdata for both options
+    if (input$numeric_group_by == "None") { # simple box plot with no group by
+      ggplot(boxdata, aes(y = .data[[input$numeric_first]])) +
+        geom_boxplot() +
+        labs(y = var_labels[[input$numeric_first]],
+             title = var_labels[[input$numeric_first]]) +
+        theme(plot.title = element_text(hjust = 0.5))
+    } else { # group by results in side-by-side box plot
+      ggplot(boxdata |> drop_na(.data[[input$numeric_group_by]]), 
+             aes(x = .data[[input$numeric_group_by]], 
+                 y = .data[[input$numeric_first]], 
+                 fill = .data[[input$numeric_group_by]])) +
+        geom_boxplot() +
+        labs(x = var_labels[[input$numeric_group_by]],
+             y = var_labels[[input$numeric_first]],
+             title = paste(var_labels[[input$numeric_first]], "by", 
+                           var_labels[[input$numeric_group_by]])) +
+        theme(plot.title = element_text(hjust = 0.5),
+              legend.position = "none")
+    }
+  })
+
+  # Histogram (w/ faceting option)
+  output$histogram <- renderPlot({
+    req(input$numeric_second == "None" | input$numeric_second == input$numeric_first)  # proceed if second variable is none -OR- both variables are the same
+    histdata <- mysubset() |> drop_na(.data[[input$numeric_first]]) # drop na here, then use boxdata for both options 
+    if (input$numeric_group_by == "None") { # simple histogram, no faceting
+      ggplot(histdata, aes(x = .data[[input$numeric_first]])) +
+        geom_histogram(bins = 30) +
+        labs(x = var_labels[[input$numeric_first]],
+             title = var_labels[[input$numeric_first]]) +
+        theme(plot.title = element_text(hjust = 0.5))
+    } else { # group by results in faceted histogram
+      ggplot(histdata |> drop_na(.data[[input$numeric_group_by]]), 
+             aes(x = .data[[input$numeric_first]], 
+                 fill = .data[[input$numeric_group_by]])) +
+        geom_histogram(bins = 30, alpha = 0.5) + 
+        facet_wrap(vars(.data[[input$numeric_group_by]])) +
+        labs(x = var_labels[[input$numeric_first]],
+             fill = var_labels[[input$numeric_group_by]],
+             title = var_labels[[input$numeric_first]],
+             subtitle = paste("Faceted by", var_labels[[input$numeric_group_by]])) + 
+        theme(plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5),
+              legend.position = "none")
+    }
+  })
+  
+  # Scatter Plot (w/ coloring option)
+  output$scatter <- renderPlot({
+    req(input$numeric_second != "None", input$numeric_second != input$numeric_first)  # proceed if second variable is selected -AND- both variables are different
+    scatterdata <- mysubset() |> drop_na(.data[[input$numeric_first]], .data[[input$numeric_second]]) # drop na here, then use boxdata for both options 
+    if (input$numeric_group_by == "None") { # simple scatter, no coloring
+      ggplot(scatterdata, 
+             aes(x = .data[[input$numeric_second]], 
+                 y = .data[[input$numeric_first]])) +
+        geom_point(alpha = 0.5, size = 0.9) +
+        labs(x = var_labels[[input$numeric_second]],
+             y = var_labels[[input$numeric_first]],
+             title = paste(var_labels[[input$numeric_first]], "vs", 
+                           var_labels[[input$numeric_second]])) +
+        theme(plot.title = element_text(hjust = 0.5))
+    } else { # group by results in colored scatter
+      ggplot(scatterdata |> drop_na(.data[[input$numeric_group_by]]), 
+             aes(x = .data[[input$numeric_second]], 
+                 y = .data[[input$numeric_first]], 
+                 color = .data[[input$numeric_group_by]])) +
+        geom_point(alpha = 0.5, size = 0.9) +
+        labs(x = var_labels[[input$numeric_second]],
+             y = var_labels[[input$numeric_first]],
+             color = var_labels[[input$numeric_group_by]],
+             title = paste(var_labels[[input$numeric_first]], "vs", 
+                           var_labels[[input$numeric_second]], "by",
+                           var_labels[[input$numeric_group_by]])) +
+        theme(plot.title = element_text(hjust = 0.5))
+    }
+  })
+  
+  
 }
+
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
