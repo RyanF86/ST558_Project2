@@ -66,14 +66,22 @@ ui <- fluidPage(
                             conditionalPanel(
                               condition = "input.categorical_second == 'None'",
                               plotOutput("bar_one")
-                            ),
+                              ),
                             # Display Side-By-Side Bar Graph (for 2 categorical)
                             conditionalPanel(
                               condition = "input.categorical_second != 'None'",
                               plotOutput("bar_two")
-                            )
+                              ),
                             # Display Contingency Table (for 1 categorical)
+                            conditionalPanel(
+                              condition = "input.categorical_second == 'None' | input.categorical_second == input.categorical_first",
+                              gt_output("contingency_one")
+                              ),
                             # Display Two-Way Contingency Table (for 2 categorical)
+                            conditionalPanel(
+                              condition = "input.categorical_second != 'None'",
+                              gt_output("contingency_two")
+                              )
                             ),
                    tabPanel("Numeric Summaries",
                             selectizeInput(inputId = "numeric_first", label = "First Numeric Variable", choices = numeric_vars, selected = "year"),
@@ -202,7 +210,32 @@ server <- function(input, output, session) {
            title = paste("Count of Charted Matches by", var_labels[[input$categorical_first]], "and", var_labels[[input$categorical_second]])) + 
       scale_fill_discrete(var_labels[[input$categorical_second]]) +
       theme(plot.title = element_text(hjust = 0.5))
-  })  
+  })
+  
+  # One-Way Contingency Table
+  output$contingency_one <- render_gt({
+    req(input$categorical_second == "None" | input$categorical_second == input$categorical_first) # proceed if second variable is none -OR- both variables are the same
+    mysubset() |>
+      drop_na(.data[[input$categorical_first]]) |>
+      group_by(.data[[input$categorical_first]]) |>
+      summarize(count = n()) |>
+      set_names(c(var_labels[[input$categorical_first]], "Count")) |> # uses the corresponding label      
+      gt() |>
+      tab_header(title = paste("Count by", var_labels[[input$categorical_first]]))
+  })
+  
+  # Two-Way Contingency Table
+  output$contingency_two <- render_gt({
+    req(input$categorical_second != "None" && input$categorical_second != input$categorical_first) # proceed if second variable is selected -AND- both variables are different
+    mysubset() |>
+      drop_na(.data[[input$categorical_first]], .data[[input$categorical_second]]) |>
+      group_by(.data[[input$categorical_first]], .data[[input$categorical_second]]) |>
+      summarize(count = n(), .groups = "drop") |>
+      pivot_wider(names_from = !!sym(input$categorical_second), values_from = count) |>
+      gt(rowname_col = input$categorical_first) |>
+      tab_header(title = paste(var_labels[[input$categorical_second]], "by", var_labels[[input$categorical_first]]))
+  }) 
+   
 }
 
 # Run the application 
