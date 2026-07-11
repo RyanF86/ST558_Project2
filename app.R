@@ -104,15 +104,16 @@ ui <- fluidPage(
                             ),                            
 
                             # Display Numeric Summary
+                            gt_output("numeric_summary")
+                            
                             ),
                    
-                   tabPanel("Player Comparison", # since there are so many options for the player dropdown, this will be updated on the server side insead
-                            selectizeInput(inputId = "first_player", label = "First Player", choices = NULL),
-                            selectizeInput(inputId = "second_player", label = "Second Player", choices = NULL)
-                            # Check for either player with n=0
-                            # Display Radar Chart
-                            # Display Player Metrics Table
-                            # Warning if n is small
+                   tabPanel("Player Comparison", # since there are so many options for the player dropdown, this will be updated on the server side instead
+                            selectizeInput(inputId = "first_player", label = "First Player", choices = NULL), # see updateSelectizeInput() on server
+                            selectizeInput(inputId = "second_player", label = "Second Player", choices = NULL), # see updateSelectizeInput() on server
+                            plotOutput("radar"), # display radar chart
+                            textOutput("radar_warning"), # display warnings, if applicable
+                            gt_output("player_table") # display player table
                             )
                             
                  )
@@ -168,7 +169,6 @@ server <- function(input, output, session) {
              .data[[input$num_subset_second]] >= input$range_second[1],
              .data[[input$num_subset_second]] <= input$range_second[2]
              )
-
   })
   
   # Data Table
@@ -327,6 +327,117 @@ server <- function(input, output, session) {
     }
   })
   
+  # Numeric Summary Table
+  output$numeric_summary <- render_gt({
+    # num_vars will contain of list of which numeric variables to summarize (1 or 2)
+    num_vars <- input$numeric_first
+    if (input$numeric_second != "None" && input$numeric_second != input$numeric_first) {
+      num_vars <- c(num_vars, input$numeric_second)
+    }
+    numdata <- mysubset()
+    if (input$numeric_group_by != "None") { # apply grouping only if a group variable is selected
+      numdata <- numdata |> 
+        drop_na(.data[[input$numeric_group_by]]) |>
+        group_by(.data[[input$numeric_group_by]])
+    }
+    summary_tbl <- numdata |>
+      summarize(across(.cols = all_of(num_vars),
+                       list(mean   = ~ mean(.x, na.rm = TRUE),
+                            median = ~ median(.x, na.rm = TRUE),
+                            sd     = ~ sd(.x, na.rm = TRUE),
+                            Q1     = ~ quantile(.x, 0.25, na.rm = TRUE),
+                            Q3     = ~ quantile(.x, 0.75, na.rm = TRUE)),
+                       .names = "{.fn}.{.col}"),
+                .groups = "drop") |> # removes grouping if present
+      pivot_longer(cols = contains("."),
+                   names_to = c("Statistic", "Variable"),
+                   names_sep = "\\.") |>
+      pivot_wider(names_from = Statistic, values_from = value) |>
+      mutate(Variable = var_labels[Variable])   # convert column names to display labels
+    # build the gt, grouping only if applicable
+    if (input$numeric_group_by != "None") {
+      summary_tbl |>
+        gt(groupname_col = input$numeric_group_by, rowname_col = "Variable") |>
+        fmt_number(decimals = 3)
+    } else {
+      summary_tbl |>
+        gt(rowname_col = "Variable") |>
+        fmt_number(decimals = 3)
+    }
+  })
+  
+  # Get player match counts for use later in output$radar and output$radar_warning
+  player_counts <- reactive({
+    playercountdata <- mysubset()
+    n_first  <- sum(playercountdata$player == input$first_player, na.rm = TRUE) # grab sum of first player's matches
+    n_second <- if (input$second_player == "None") NA else # 
+      sum(playercountdata$player == input$second_player, na.rm = TRUE) # grab sum of second player's matches
+    list(first = n_first, second = n_second)
+  })
+  
+  # Radar Chart
+  output$radar <- renderPlot({
+    req(input$first_player) # proceed if first player has been chosen
+    counts <- player_counts()
+    validate(
+      need(counts$first > 0, # check if there is no data for first player
+           paste(input$first_player, "has no charted matches under the current filters.")) 
+    )
+    if (input$second_player != "None") { # if second player has been chosen
+      validate(
+        need(counts$second > 0, # check if there is no data for second player
+             paste(input$second_player, "has no charted matches under the current filters."))
+      )
+    }
+    # Get data for the radar chart, using function defined in helpers.R
+    radardata <- build_radar_data(mysubset(), input$first_player, input$second_player)
+    # Build the radar chart
+    par(mar = c(1, 1, 1, 1)) # narrow margins for less white space
+    radarchart(radardata,
+               vlcex = 0.8, # scales label text size
+               pcol = c("red", "blue"), # applies colors
+               pfcol = c(adjustcolor("red", alpha.f = 0.3), # applies fill colors with transparency
+                         adjustcolor("blue", alpha.f = 0.3)), 
+               plwd = 2, # line width
+               plty = 1, # solid lines
+               cglcol = "grey", # grid line color
+               cglty = 1, # solid grid line
+               cglwd = 0.5, # grid line width
+               title = "Mean Metrics Across All Charted Matches")
+    legend("topright", # build legend in top right
+           legend = rownames(radardata)[-c(1, 2)],   # drop max/min rows
+           col = c("red", "blue"), # legend colors
+           lwd = 4, # legend line width
+           bty = "n", # remove legend border box
+           cex = 0.8) # scale legend text size
+  })
+  
+  # Warning for small radar chart sample sizes (n < 5)
+  output$radar_warning <- renderText({
+    req(input$first_player) # proceed if first player has been chosen
+    counts <- player_counts()
+    msgs <- character(0) # msgs initialized
+    if (counts$first > 0 && counts$first < 5) {
+      msgs <- c(msgs, paste0(input$first_player, " has only ", counts$first, 
+                             " charted match(es) under the current filters — interpret with caution."))
+    }
+    if (input$second_player != "None" && !is.na(counts$second) && 
+        counts$second > 0 && counts$second < 5) {
+      msgs <- c(msgs, paste0(input$second_player, " has only ", counts$second, 
+                             " charted match(es) under the current filters — interpret with caution."))
+    }
+    msgs # assembles and returns the message
+  })
+  
+  # Player Data Table
+  output$player_table <- render_gt({
+    req(input$first_player) # proceed if first player has been chosen
+    build_radar_table(mysubset(), input$first_player, input$second_player) |> # function from helpers.R
+      gt() |>
+      fmt_number(columns = -c(Player, `Charted Matches`), decimals = 3) |> # round to 3 decimals for select columns
+      tab_header(title = "Mean Player Metrics",
+                 subtitle = "Across All Charted Matches")
+  })
   
 }
 

@@ -75,7 +75,8 @@ build_radar_data <- function(data, player_a, player_b) {
     group_by(player) |>
     summarize(across(c(total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,
                        aggression_pct, fh_eff_pct, bh_eff_pct),
-                     ~ mean(.x, na.rm = TRUE))) |> # calculating the means of each variable for each player
+                     ~ mean(.x, na.rm = TRUE)),# calculating the means of each variable for each player
+              ) |> 
     as.data.frame() # radarchart() needs data.frame format
   
   rownames(player_rows) <- player_rows$player # add the players as row names, which is how radarchart() will get these labels
@@ -87,12 +88,16 @@ build_radar_data <- function(data, player_a, player_b) {
   out # return out
 }
 
-# function to build the radar chart companion table 
+# function to build the radar chart companion table data 
 build_radar_table <- function(data, player_a, player_b) {
   data |>
     filter(player %in% c(player_a, player_b)) |> # filters for the two players
-    select(player, n, total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,
-           aggression_pct, fh_eff_pct, bh_eff_pct) |> # selects all the radar chart variables, and also n
+    group_by(player) |>
+    summarize(n = n(),
+              across(c(total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,
+                       aggression_pct, fh_eff_pct, bh_eff_pct),
+                     ~ mean(.x, na.rm = TRUE)),
+              .groups = "drop") |>
     rename_with(~ var_labels[.x], .cols = -c(player, n)) |> # use var_labels for renaming all variables except n and player
     rename(Player = player, `Charted Matches` = n) # manually renaming n and player
 }

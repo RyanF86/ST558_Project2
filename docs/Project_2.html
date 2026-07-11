@@ -1,0 +1,3406 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ST 558 Project 2, Ryan Friedman</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ece42c8223ec2bf36298a08f122c9a68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ST 558 Project 2, Ryan Friedman</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This document will include a description of the dataset, detailed data combining/cleaning activities, and exploratory data analysis with summary tables and plots. These steps are prerequisite to creating the associated Shiny dashboard app.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># for clean_names()</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fmsb) <span class="co"># for radarchart()</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"helpers.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="description-of-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="description-of-dataset">1. Description of Dataset</h2>
+<p>The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <a href="https://github.com/JeffSackmann/tennis_MatchChartingProject.git" class="uri">https://github.com/JeffSackmann/tennis_MatchChartingProject.git</a>. The MCP aims to build a detailed public record of professional tennis matches. MCP data covers over 11,000 singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the summary data. Note: This is not a comprehensive dataset of all professional tennis matches. Because charting is done by individual volunteer contributors, the data tends to over-represent the biggest tournaments and the most popular players.</p>
+<p>Four raw data .csv files are downloaded from the GitHub repo and placed in <code>RawData/</code>:</p>
+<ul>
+<li><p><code>charting-m-matches.csv</code></p></li>
+<li><p><code>charting-m-stats-Overview.csv</code></p></li>
+<li><p><code>charting-w-matches.csv</code></p></li>
+<li><p><code>charting-w-stats-Overview.csv</code></p></li>
+</ul>
+<p>“m” and “w” indicate men’s and women’s professional tennis tour matches, respectively. “…-matches.csv” files contain general information on the matches played such as players, date, tournament, and surface. “…-stats-Overview.csv” files contain more detailed match performance information such as points won, aces, unforced errors, etc. Each observation across all four files contains a match_id variable, indicating the specific match observed. This variable will be used to join the data.</p>
+</section>
+<section id="data-combination-and-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="data-combination-and-cleaning">2. Data Combination and Cleaning</h2>
+<p>Combining and cleaning the data will involve the following general steps:</p>
+<ol type="1">
+<li><p>Combine all four raw data files into a single tibble, adding a categorical variable to indicate ‘M’ or ‘W’ tour.</p></li>
+<li><p>Delete variables and/or observations that will not be used in subsequent analysis</p></li>
+<li><p>Add new variables calculated from existing variables</p></li>
+<li><p>Confirm correct format/type for all variables</p></li>
+</ol>
+<p>The variables for the “-matches.csv” files are as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>match_id</td>
+<td>Identifier</td>
+<td>Will use for join with overview files</td>
+</tr>
+<tr class="even">
+<td>Player 1</td>
+<td>Categorical</td>
+<td>Name of Player 1</td>
+</tr>
+<tr class="odd">
+<td>Player 2</td>
+<td>Categorical</td>
+<td>Name of Player 2</td>
+</tr>
+<tr class="even">
+<td>Pl 1 hand</td>
+<td>Categorical</td>
+<td>Handed for Player 1</td>
+</tr>
+<tr class="odd">
+<td>Pl 2 hand</td>
+<td>Categorical</td>
+<td>Handed for Player 2</td>
+</tr>
+<tr class="even">
+<td>Date</td>
+<td>Numerical</td>
+<td>Currently stored as YYYYMMDD integer.</td>
+</tr>
+<tr class="odd">
+<td>Tournament</td>
+<td>Categorical</td>
+<td>Name of Tournament. Delete later.</td>
+</tr>
+<tr class="even">
+<td>Round</td>
+<td>Categorical</td>
+<td>Round of the Tournament (i.e.&nbsp;F, SF, R64, etc.).</td>
+</tr>
+<tr class="odd">
+<td>Time</td>
+<td>Categorical</td>
+<td>Many missing values and inconsistent formatting. Delete later.</td>
+</tr>
+<tr class="even">
+<td>Court</td>
+<td>Categorical</td>
+<td>Name/number of court. Many missing values. Delete later.</td>
+</tr>
+<tr class="odd">
+<td>Surface</td>
+<td>Categorical</td>
+<td>Hard, Clay or Grass</td>
+</tr>
+<tr class="even">
+<td>Umpire</td>
+<td>Categorical</td>
+<td>Name of umpire. Many missing values. Delete later.</td>
+</tr>
+<tr class="odd">
+<td>Best of</td>
+<td>Numerical</td>
+<td>Best of 3 or Best of 5. Delete later.</td>
+</tr>
+<tr class="even">
+<td>Final TB?</td>
+<td>Categorical</td>
+<td>Meaning unclear. Delete later.</td>
+</tr>
+<tr class="odd">
+<td>Charted by</td>
+<td>Categorical</td>
+<td>Name of data contributer. Delete later.</td>
+</tr>
+</tbody>
+</table>
+<p>The variables for the “-Overview.csv” files are as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 24%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>match_id</td>
+<td>Identifier</td>
+<td>Will use for join with overview files</td>
+</tr>
+<tr class="even">
+<td>player</td>
+<td>Categorical</td>
+<td>Name of player</td>
+</tr>
+<tr class="odd">
+<td>set</td>
+<td>Categorical</td>
+<td>Stats by set number. Filter later to keep only “Total” and then delete.</td>
+</tr>
+<tr class="even">
+<td>serve_pts</td>
+<td>Numerical</td>
+<td>Points served</td>
+</tr>
+<tr class="odd">
+<td>aces</td>
+<td>Numerical</td>
+<td>Aces</td>
+</tr>
+<tr class="even">
+<td>dfs</td>
+<td>Numerical</td>
+<td>Double faults</td>
+</tr>
+<tr class="odd">
+<td>first_in</td>
+<td>Numerical</td>
+<td>First serves in play</td>
+</tr>
+<tr class="even">
+<td>first_won</td>
+<td>Numerical</td>
+<td>First serve points won</td>
+</tr>
+<tr class="odd">
+<td>second_in</td>
+<td>Numerical</td>
+<td>Second serves in play</td>
+</tr>
+<tr class="even">
+<td>second_won</td>
+<td>Numerical</td>
+<td>Second serve points won</td>
+</tr>
+<tr class="odd">
+<td>bk_pts</td>
+<td>Numerical</td>
+<td>Break points faced</td>
+</tr>
+<tr class="even">
+<td>bp_saved</td>
+<td>Numerical</td>
+<td>Break points saved</td>
+</tr>
+<tr class="odd">
+<td>return_pts</td>
+<td>Numerical</td>
+<td>Points returned</td>
+</tr>
+<tr class="even">
+<td>return_pts_won</td>
+<td>Numerical</td>
+<td>Return points won</td>
+</tr>
+<tr class="odd">
+<td>winners</td>
+<td>Numerical</td>
+<td>Winners</td>
+</tr>
+<tr class="even">
+<td>winners_fh</td>
+<td>Numerical</td>
+<td>Forehand winners</td>
+</tr>
+<tr class="odd">
+<td>winners_bh</td>
+<td>Numerical</td>
+<td>Backhand winners</td>
+</tr>
+<tr class="even">
+<td>unforced</td>
+<td>Numerical</td>
+<td>Unforced errors</td>
+</tr>
+<tr class="odd">
+<td>unforced_fh</td>
+<td>Numerical</td>
+<td>Forehand unforced errors</td>
+</tr>
+<tr class="even">
+<td>unforced_bh</td>
+<td>Numerical</td>
+<td>Backhand unforced errors</td>
+</tr>
+</tbody>
+</table>
+<p>Now to begin data combination and cleaning:</p>
+<ol type="1">
+<li>Combine all four raw data files into a single tibble, adding a categorical variable to track men’s vs women’s tour.</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in the four .csv files</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>M_Matches <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"RawData/charting-m-matches.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>M_Overview <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"RawData/charting-m-stats-Overview.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>W_Matches <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"RawData/charting-w-matches.csv"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>W_Overview <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"RawData/charting-w-stats-Overview.csv"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># some error messages occurred for M_Matches and W_Matches during import</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># problems(M_Matches) indicates rows 907 and 908 of have issues</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># print rows 906 to 909 to see if we can diagnose</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>M_Matches[<span class="dv">906</span><span class="sc">:</span><span class="dv">909</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 15
+  match_id      `Player 1` `Player 2` `Pl 1 hand` `Pl 2 hand`    Date Tournament
+  &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;     
+1 20240915-M-D… Tallon Gr… Flavio Co… R           R            2.02e7 Davis Cup…
+2 20240915-M-D… R          R          20240915    Davis Cup … NA      15:15     
+3 20240915-M-D… Botic Van… Matteo Be… &lt;NA&gt;        &lt;NA&gt;         2.02e7 Davis_Cup…
+4 20240914-M-D… Guy Den O… Jelle Sels R           R            2.02e7 Dobrich CH
+# ℹ 8 more variables: Round &lt;chr&gt;, Time &lt;chr&gt;, Court &lt;chr&gt;, Surface &lt;chr&gt;,
+#   Umpire &lt;chr&gt;, `Best of` &lt;dbl&gt;, `Final TB?` &lt;chr&gt;, `Charted by` &lt;chr&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Row 907 has data issues, but also is redundant with row 908 </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete Row 907</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>M_Matches <span class="ot">&lt;-</span> M_Matches[<span class="sc">-</span><span class="dv">907</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># problems(W_Matches) indicates rows 1586 to 1594 have issues</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># print rows 1585 to 1595 to see if we can diagnose</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>W_Matches[<span class="dv">1585</span><span class="sc">:</span><span class="dv">1595</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 11 × 15
+   match_id `Player 1` `Player 2` `Pl 1 hand` `Pl 2 hand` Date  Tournament Round
+   &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;
+ 1 2022111… Danielle … Marketa V… R           L           2022… BJK Cup F… RR   
+ 2 2022111… R          R          20221111    BJK Cup Fi… RR    &lt;NA&gt;       &lt;NA&gt; 
+ 3 2022111… R          R          20221111    BJK Cup Fi… RR    14:50      Boul…
+ 4 2022111… R          R          20221110    BJK Cup Fi… RR    &lt;NA&gt;       Emir…
+ 5 2022111… L          L          20221110    BJK Cup Fi… RR    &lt;NA&gt;       &lt;NA&gt; 
+ 6 2022111… R          R          20221110    BJK Cup Fi… RR    &lt;NA&gt;       Sir …
+ 7 2022111… R          R          20221110    BJK Cup Fi… RR    &lt;NA&gt;       1    
+ 8 2022110… R          R          20221109    BJK Cup Fi… RR    &lt;NA&gt;       Sir …
+ 9 2022110… R          R          20221109    BJK Cup Fi… RR    &lt;NA&gt;       Emir…
+10 2022111… Coco Gauff Katerina … &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;       &lt;NA&gt; 
+11 2022111… Alize Cor… Lesley Pa… &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;       &lt;NA&gt; 
+# ℹ 7 more variables: Time &lt;chr&gt;, Court &lt;chr&gt;, Surface &lt;chr&gt;, Umpire &lt;chr&gt;,
+#   `Best of` &lt;chr&gt;, `Final TB?` &lt;chr&gt;, `Charted by` &lt;chr&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rows 1585 to 1594 have issues.  They have the wrong data in the wrong columns and/or are missing the surface data.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's delete these rows.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>W_Matches <span class="ot">&lt;-</span> W_Matches[<span class="sc">-</span>(<span class="dv">1585</span><span class="sc">:</span><span class="dv">1594</span>), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Also variables Date and 'Best of' imported as chr while M_Matches has them as numeric.  Let's fix that.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>W_Matches <span class="ot">&lt;-</span> W_Matches <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Date =</span> <span class="fu">as.numeric</span>(Date),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Best of</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Best of</span><span class="st">`</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Join each match table to the corresponding overview table</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>M_Data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(M_Overview, M_Matches, <span class="at">by =</span> <span class="st">"match_id"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>W_Data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(W_Overview, W_Matches, <span class="at">by =</span> <span class="st">"match_id"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Combine the men’s and women’s data</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="at">M =</span> M_Data, <span class="at">W =</span> W_Data, <span class="at">.id =</span> <span class="st">"Tour"</span>) <span class="co"># new "Tour" variable will be "M" or "W" depending on data source</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="2" type="1">
+<li>Delete variables and/or observations that will not be used in subsequent analysis</li>
+</ol>
+<ul>
+<li>First delete rows and columns as described earlier. Also fix remaining names</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(set <span class="sc">==</span> <span class="st">"Total"</span>) <span class="sc">|&gt;</span> <span class="co"># only include full match observations (exclude per set observations)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Time, <span class="co"># deleting variables as described earlier</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>Court,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>Umpire,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="st">`</span><span class="at">Final TB?</span><span class="st">`</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="st">`</span><span class="at">Charted by</span><span class="st">`</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>set) <span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="co"># to correct variable names with spaces and non-standard characters</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Each row represents a single player for a particular match. As such, “player_1” and “player_2” are redundant with “player”. However they do correlate with “pl_1_hand” and “pl_2_hand”. Let’s delete those four variables while creating new variable “handed” that indicates whether “player” is left or right-handed.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">handed =</span> <span class="fu">case_when</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    player <span class="sc">==</span> player_1 <span class="sc">~</span> pl_1_hand, <span class="co"># if player is player_1, assign pl_1_hand</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    player <span class="sc">==</span> player_2 <span class="sc">~</span> pl_2_hand, <span class="co"># if player is player_2, assign pl_2_hand</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_character_</span> <span class="co"># otherwise (i.e. name mismatch or missing assign NA)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (<span class="sc">-</span>player_1,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>          <span class="sc">-</span>player_2,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>          <span class="sc">-</span>pl_1_hand,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>          <span class="sc">-</span>pl_2_hand) <span class="co"># deleting variables no longer needed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="3" type="1">
+<li>Add new variables calculated from existing variables</li>
+</ol>
+<ul>
+<li>Percentage variables are more useful for analysis than count variables, because they are less dependent upon the length of the match.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_pts =</span> serve_pts <span class="sc">+</span> return_pts, <span class="co"># total points played</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">first_in_pct =</span> first_in <span class="sc">/</span> serve_pts, <span class="co"># first serve in percentage</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">ace_pct =</span> aces <span class="sc">/</span> serve_pts, <span class="co"># percentage of service points that are aces</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">first_won_pct =</span> first_won <span class="sc">/</span> first_in, <span class="co"># percentage of points won on first serve</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">second_won_pct =</span> second_won <span class="sc">/</span> (second_in <span class="sc">+</span> dfs), <span class="co"># percentage of points won on second serve</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">total_won_pct =</span> (first_won <span class="sc">+</span> second_won <span class="sc">+</span> return_pts_won) <span class="sc">/</span> total_pts, <span class="co"># percentage of total points won</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">df_pct =</span> dfs <span class="sc">/</span> (serve_pts <span class="sc">-</span> first_in), <span class="co"># double fault percentage</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">bp_saved_pct =</span> bp_saved <span class="sc">/</span> bk_pts, <span class="co"># break point save percentage</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">serve_pts_won_pct =</span> (first_won <span class="sc">+</span> second_won) <span class="sc">/</span> serve_pts, <span class="co"># percentage of service points won</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">return_pts_won_pct =</span> return_pts_won <span class="sc">/</span> return_pts, <span class="co"># percentage of return points won</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">winner_pct =</span> winners <span class="sc">/</span> total_pts, <span class="co"># percentage of points ending in winner</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">unforced_pct =</span> unforced <span class="sc">/</span> total_pts, <span class="co"># percentage of points ending in unforced error</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">winner_fh_pct =</span> winners_fh <span class="sc">/</span> total_pts, <span class="co"># percentage of points ending in forehand winner</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">winner_bh_pct =</span> winners_bh <span class="sc">/</span> total_pts, <span class="co"># percentage of points ending in backhand winner</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">unforced_fh_pct =</span> unforced_fh <span class="sc">/</span> total_pts, <span class="co"># percentage of points ending in forehand unforced error</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">unforced_bh_pct =</span> unforced_bh <span class="sc">/</span> total_pts, <span class="co"># percentage of points ending in backhand unforced error</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">fh_eff_pct =</span> winner_fh_pct <span class="sc">-</span> unforced_fh_pct, <span class="co"># a measure of forehand effectiveness</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">bh_eff_pct =</span> winner_bh_pct <span class="sc">-</span> unforced_bh_pct, <span class="co"># a measure of backhand effectiveness</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">aggression_pct =</span> winner_pct <span class="sc">+</span> unforced_pct) <span class="co"># a measure of overall aggression</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="4" type="1">
+<li>Confirm correct format/type for all variables</li>
+</ol>
+<ul>
+<li>Lets look for any remaining possible data issues. Use summary() to evaluate all variables.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(CombinedData)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        tour            match_id           player        serve_pts     
+ Length   :23256   Length   :23256   Length   :23256   Min.   :  4.00  
+ N.unique :    2   N.unique :11615   N.unique : 1732   1st Qu.: 56.00  
+ N.blank  :    0   N.blank  :    0   N.blank  :    0   Median : 72.00  
+ Min.nchar:    1   Min.nchar:   39   Min.nchar:    5   Mean   : 79.04  
+ Max.nchar:    1   Max.nchar:   83   Max.nchar:   35   3rd Qu.: 95.00  
+                                                       Max.   :491.00  
+                                                                       
+      aces              dfs            first_in        first_won     
+ Min.   :  0.000   Min.   : 0.000   Min.   :  1.00   Min.   :  0.00  
+ 1st Qu.:  2.000   1st Qu.: 1.000   1st Qu.: 34.00   1st Qu.: 24.00  
+ Median :  4.000   Median : 3.000   Median : 45.00   Median : 31.00  
+ Mean   :  5.527   Mean   : 3.089   Mean   : 49.17   Mean   : 34.17  
+ 3rd Qu.:  8.000   3rd Qu.: 4.000   3rd Qu.: 60.00   3rd Qu.: 42.00  
+ Max.   :115.000   Max.   :26.000   Max.   :363.00   Max.   :292.00  
+                                                                     
+   second_in        second_won        bk_pts          bp_saved     
+ Min.   :  0.00   Min.   : 0.00   Min.   : 0.000   Min.   : 0.000  
+ 1st Qu.: 20.00   1st Qu.: 9.00   1st Qu.: 4.000   1st Qu.: 2.000  
+ Median : 27.00   Median :13.00   Median : 7.000   Median : 4.000  
+ Mean   : 29.87   Mean   :14.73   Mean   : 7.203   Mean   : 4.226  
+ 3rd Qu.: 37.00   3rd Qu.:19.00   3rd Qu.:10.000   3rd Qu.: 6.000  
+ Max.   :158.00   Max.   :99.00   Max.   :34.000   Max.   :23.000  
+                                                                   
+   return_pts     return_pts_won      winners         winners_fh   
+ Min.   :  4.00   Min.   :  0.00   Min.   :  0.00   Min.   : 0.00  
+ 1st Qu.: 56.00   1st Qu.: 21.00   1st Qu.: 16.00   1st Qu.: 7.00  
+ Median : 72.00   Median : 28.00   Median : 24.00   Median :11.00  
+ Mean   : 79.04   Mean   : 30.14   Mean   : 26.14   Mean   :12.36  
+ 3rd Qu.: 95.00   3rd Qu.: 38.00   3rd Qu.: 33.00   3rd Qu.:16.00  
+ Max.   :491.00   Max.   :117.00   Max.   :233.00   Max.   :84.00  
+                                                                   
+   winners_bh        unforced       unforced_fh     unforced_bh   
+ Min.   : 0.000   Min.   :  0.00   Min.   : 0.00   Min.   : 0.00  
+ 1st Qu.: 3.000   1st Qu.: 19.00   1st Qu.: 8.00   1st Qu.: 7.00  
+ Median : 6.000   Median : 26.00   Median :12.00   Median :11.00  
+ Mean   : 6.755   Mean   : 28.36   Mean   :13.53   Mean   :11.74  
+ 3rd Qu.: 9.000   3rd Qu.: 36.00   3rd Qu.:18.00   3rd Qu.:15.00  
+ Max.   :52.000   Max.   :118.00   Max.   :70.00   Max.   :70.00  
+                                                                  
+      date              tournament          round            surface     
+ Min.   :19600529   Length   :23256   Length   :23256   Length   :23256  
+ 1st Qu.:20130315   N.unique :  606   N.unique :   14   N.unique :    4  
+ Median :20191018   N.blank  :    0   N.blank  :    0   N.blank  :    0  
+ Mean   :20160542   Min.nchar:    3   Min.nchar:    1   Min.nchar:    4  
+ 3rd Qu.:20230906   Max.nchar:   29   Max.nchar:    4   Max.nchar:   18  
+ Max.   :20260524   NAs      :   22   NAs      :   22   NAs      :    4  
+ NAs    :22                                                              
+    best_of            handed        total_pts      first_in_pct   
+ Min.   :1.000   Length   :23256   Min.   : 13.0   Min.   :0.2500  
+ 1st Qu.:3.000   N.unique :    3   1st Qu.:112.0   1st Qu.:0.5702  
+ Median :3.000   N.blank  :    0   Median :144.0   Median :0.6230  
+ Mean   :3.403   Min.nchar:    1   Mean   :158.1   Mean   :0.6224  
+ 3rd Qu.:3.000   Max.nchar:    1   3rd Qu.:191.0   3rd Qu.:0.6757  
+ Max.   :5.000   NAs      :   54   Max.   :980.0   Max.   :1.0000  
+ NAs    :56                                                        
+    ace_pct        first_won_pct    second_won_pct   total_won_pct   
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.02381   1st Qu.:0.6216   1st Qu.:0.3684   1st Qu.:0.4488  
+ Median :0.05455   Median :0.7000   Median :0.4483   Median :0.5000  
+ Mean   :0.06910   Mean   :0.6935   Mean   :0.4522   Mean   :0.5000  
+ 3rd Qu.:0.09836   3rd Qu.:0.7746   3rd Qu.:0.5333   3rd Qu.:0.5512  
+ Max.   :0.62500   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+                                    NAs    :1                        
+     df_pct         bp_saved_pct    serve_pts_won_pct return_pts_won_pct
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.0000    Min.   :0.0000    
+ 1st Qu.:0.05000   1st Qu.:0.4286   1st Qu.:0.5521    1st Qu.:0.3136    
+ Median :0.09091   Median :0.5714   Median :0.6207    Median :0.3793    
+ Mean   :0.10444   Mean   :0.5688   Mean   :0.6171    Mean   :0.3829    
+ 3rd Qu.:0.14583   3rd Qu.:0.7273   3rd Qu.:0.6864    3rd Qu.:0.4479    
+ Max.   :0.60000   Max.   :1.0000   Max.   :1.0000    Max.   :1.0000    
+ NAs    :1         NAs    :1145                                         
+   winner_pct      unforced_pct    winner_fh_pct     winner_bh_pct    
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.00000   Min.   :0.00000  
+ 1st Qu.:0.1222   1st Qu.:0.1381   1st Qu.:0.05426   1st Qu.:0.02484  
+ Median :0.1591   Median :0.1772   Median :0.07463   Median :0.03846  
+ Mean   :0.1650   Mean   :0.1817   Mean   :0.07786   Mean   :0.04247  
+ 3rd Qu.:0.2006   3rd Qu.:0.2200   3rd Qu.:0.09735   3rd Qu.:0.05590  
+ Max.   :0.5735   Max.   :0.5882   Max.   :0.34286   Max.   :0.25000  
+                                                                      
+ unforced_fh_pct   unforced_bh_pct     fh_eff_pct          bh_eff_pct       
+ Min.   :0.00000   Min.   :0.00000   Min.   :-0.272727   Min.   :-0.235294  
+ 1st Qu.:0.05926   1st Qu.:0.05109   1st Qu.:-0.039615   1st Qu.:-0.057692  
+ Median :0.08333   Median :0.07143   Median :-0.008264   Median :-0.031579  
+ Mean   :0.08680   Mean   :0.07488   Mean   :-0.008937   Mean   :-0.032415  
+ 3rd Qu.:0.11017   3rd Qu.:0.09459   3rd Qu.: 0.022388   3rd Qu.:-0.006897  
+ Max.   :0.30928   Max.   :0.28431   Max.   : 0.257143   Max.   : 0.147059  
+                                                                            
+ aggression_pct  
+ Min.   :0.0641  
+ 1st Qu.:0.2896  
+ Median :0.3415  
+ Mean   :0.3467  
+ 3rd Qu.:0.3990  
+ Max.   :0.7537  
+                 </code></pre>
+</div>
+</div>
+<ul>
+<li>“surface” is showing 4 unique levels. 3 is expected. Find and correct the error.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(CombinedData<span class="sc">$</span>surface) <span class="co"># check unique elements of surface</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Clay"               "Hard"               "Grass"             
+[4] "Eva Asderaki-Moore" NA                  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filer to exclude that particular row.  Keep NA rows. </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span> <span class="fu">filter</span>(surface <span class="sc">!=</span> <span class="st">"Eva Asderaki-Moore"</span> <span class="sc">|</span> <span class="fu">is.na</span>(surface))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>“handed” is showing 3 unique levels. 2 is expected. Find and correct the error.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(CombinedData<span class="sc">$</span>handed) <span class="co"># check unique elements of handed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "R" "L" NA  "l"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correct "l" to "L"</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">handed =</span> <span class="fu">toupper</span>(handed))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>“round” has some unexpected and uncommon values. Review and trim appropriately</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="at">rows=</span><span class="dv">14</span>, CombinedData <span class="sc">|&gt;</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(round) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(round) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>())) <span class="co"># get counts of all 14 levels of round</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 14 × 2
+   round count
+   &lt;chr&gt; &lt;int&gt;
+ 1 BR       20
+ 2 F      3310
+ 3 PO        2
+ 4 PQ        2
+ 5 Q1      134
+ 6 Q2       88
+ 7 Q3       66
+ 8 QF     3064
+ 9 R128   1940
+10 R16    3370
+11 R32    4252
+12 R64    2632
+13 RR     1206
+14 SF     3146</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop PO and PQ as they are very uncommon.  Keep NA</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>round <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"BR"</span>, <span class="st">"PO"</span>, <span class="st">"PQ"</span>) <span class="sc">|</span> <span class="fu">is.na</span>(round))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><p>NA values for the “pct_” variables are expected, as the denominator for the calculation may at times be zero.</p></li>
+<li><p>“tournament” and “best_of” are no longer desired. Delete these.</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>tournament,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>best_of)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Convert “date” variable to “year”. For the purpose of this analysis, there is no need for any detail beyond the year.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(<span class="fu">substr</span>(<span class="fu">as.character</span>(date), <span class="dv">1</span>, <span class="dv">4</span>))) <span class="sc">|&gt;</span> <span class="co"># convert "date" to a string, keep only the first four characters, then convert back to number</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>date) <span class="co"># remove "date"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Convert select categorical variables to factors: “tour” “surface” “handed” and “round”</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tour =</span> <span class="fu">factor</span>(tour),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">surface =</span> <span class="fu">factor</span>(surface),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">handed =</span> <span class="fu">factor</span>(handed),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">round =</span> <span class="fu">factor</span>(round,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Q1"</span>,<span class="st">"Q2"</span>,<span class="st">"Q3"</span>,<span class="st">"R128"</span>,<span class="st">"R64"</span>,<span class="st">"R32"</span>,<span class="st">"R16"</span>,<span class="st">"QF"</span>,<span class="st">"RR"</span>,<span class="st">"SF"</span>,<span class="st">"F"</span>),</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ordered =</span> <span class="cn">TRUE</span>), <span class="co"># putting the levels of round in logical order based on proximity to winning the tournament</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">round_group =</span> <span class="fu">factor</span>(round_group[<span class="fu">as.character</span>(round)],</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> round_group_levels,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                              <span class="at">ordered =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Delete large items from the environment that are no longer needed</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(M_Data,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>   M_Matches,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>   M_Overview,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>   W_Data,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>   W_Matches,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>   W_Overview)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Now save the cleaned data as an .rds file that can be read by the Shiny app later</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(CombinedData, <span class="st">"CombinedData.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="eda-summary-tables" class="level2">
+<h2 class="anchored" data-anchor-id="eda-summary-tables">3. EDA Summary Tables</h2>
+<ul>
+<li>Create a one-way contingency table for “handed” “tour” “surface” and “round” variables</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(CombinedData <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(handed) <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(handed) <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">handed</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">L</td>
+<td style="text-align: right;">2437</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R</td>
+<td style="text-align: right;">20739</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right-handed players are more commonly observed in the dataset than left handed players by about 8.5:1 </span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(CombinedData <span class="sc">|&gt;</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(tour) <span class="sc">|&gt;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tour) <span class="sc">|&gt;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">tour</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">15096</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">W</td>
+<td style="text-align: right;">8134</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The dataset includes nearly twice as many matches from the Men's tour than the Women's tour</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(CombinedData <span class="sc">|&gt;</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(surface) <span class="sc">|&gt;</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(surface) <span class="sc">|&gt;</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">surface</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Clay</td>
+<td style="text-align: right;">5494</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Grass</td>
+<td style="text-align: right;">2566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hard</td>
+<td style="text-align: right;">15166</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clay courts represent about twice as many matches in the dataset as Grass courts.</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hard courts represent nearly 3 times as many matches in the dataset as Clay courts.</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(CombinedData <span class="sc">|&gt;</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(round) <span class="sc">|&gt;</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(round) <span class="sc">|&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">round</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Q1</td>
+<td style="text-align: right;">134</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Q2</td>
+<td style="text-align: right;">88</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Q3</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R128</td>
+<td style="text-align: right;">1940</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R64</td>
+<td style="text-align: right;">2632</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R32</td>
+<td style="text-align: right;">4252</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R16</td>
+<td style="text-align: right;">3370</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">QF</td>
+<td style="text-align: right;">3064</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RR</td>
+<td style="text-align: right;">1206</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SF</td>
+<td style="text-align: right;">3146</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">3310</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In a standard single-elimination tournament, there is 1 F match, 2 SF matches, 4 QF matches, etc.</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># However, this dataset includes roughly equal counts (~3,000 each) of F, SF, and QF </span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This confirms the suspected sampling bias towards higher-profile matches</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Create a two-way contingency table for surface vs tour and handed vs tour</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">drop_na</span>(handed, tour) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(handed, tour) <span class="sc">|&gt;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> tour, <span class="at">values_from =</span> count))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">handed</th>
+<th style="text-align: right;">M</th>
+<th style="text-align: right;">W</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">L</td>
+<td style="text-align: right;">1677</td>
+<td style="text-align: right;">760</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R</td>
+<td style="text-align: right;">13387</td>
+<td style="text-align: right;">7352</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Left-handed players are the minority on both tours, with men's tennis showing a slightly higher share</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(CombinedData <span class="sc">|&gt;</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">drop_na</span>(surface, tour) <span class="sc">|&gt;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(surface, tour) <span class="sc">|&gt;</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> tour, <span class="at">values_from =</span> count))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">surface</th>
+<th style="text-align: right;">M</th>
+<th style="text-align: right;">W</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Clay</td>
+<td style="text-align: right;">3748</td>
+<td style="text-align: right;">1746</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Grass</td>
+<td style="text-align: right;">1676</td>
+<td style="text-align: right;">890</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hard</td>
+<td style="text-align: right;">9672</td>
+<td style="text-align: right;">5494</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hard courts are most popular, and there do not appear to be any notable differences in surface proportions between the two tours</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Find measures of center and spread for ace_pct and serve_pts_won_pct by tour</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(tour) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tour) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">c</span>(ace_pct, serve_pts_won_pct),</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">list</span>(<span class="st">"mean"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"median"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">median</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"sd"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">sd</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Q1"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Q3"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.names =</span> <span class="st">"{.fn}.{.col}"</span>)) <span class="sc">|&gt;</span> <span class="co"># creates names from the variable and the statistic</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>tour, <span class="co"># exclude tour from the pivot</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"Statistic"</span>, <span class="st">"Variable"</span>),</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> Statistic,</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> value) <span class="sc">|&gt;</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">"tour"</span>, <span class="at">rowname_col =</span> <span class="st">"Variable"</span>) <span class="sc">|&gt;</span> <span class="co"># organizes the Variable column by tour and removes the "Variable" title</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> <span class="co"># rounds everything to 3 decimals</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Ace Percentage and Serve Points Won Percentage: Mean, Median, SD, Q1, and Q3"</span>,</span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Stratified by tour"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="okkcfeawoh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#okkcfeawoh table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#okkcfeawoh thead, #okkcfeawoh tbody, #okkcfeawoh tfoot, #okkcfeawoh tr, #okkcfeawoh td, #okkcfeawoh th {
+  border-style: none;
+}
+
+#okkcfeawoh p {
+  margin: 0;
+  padding: 0;
+}
+
+#okkcfeawoh .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#okkcfeawoh .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#okkcfeawoh .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#okkcfeawoh .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#okkcfeawoh .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#okkcfeawoh .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#okkcfeawoh .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#okkcfeawoh .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#okkcfeawoh .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#okkcfeawoh .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#okkcfeawoh .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#okkcfeawoh .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#okkcfeawoh .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#okkcfeawoh .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#okkcfeawoh .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#okkcfeawoh .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#okkcfeawoh .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#okkcfeawoh .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#okkcfeawoh .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#okkcfeawoh .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#okkcfeawoh .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#okkcfeawoh .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#okkcfeawoh .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#okkcfeawoh .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#okkcfeawoh .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#okkcfeawoh .gt_left {
+  text-align: left;
+}
+
+#okkcfeawoh .gt_center {
+  text-align: center;
+}
+
+#okkcfeawoh .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#okkcfeawoh .gt_font_normal {
+  font-weight: normal;
+}
+
+#okkcfeawoh .gt_font_bold {
+  font-weight: bold;
+}
+
+#okkcfeawoh .gt_font_italic {
+  font-style: italic;
+}
+
+#okkcfeawoh .gt_super {
+  font-size: 65%;
+}
+
+#okkcfeawoh .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#okkcfeawoh .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#okkcfeawoh .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#okkcfeawoh .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#okkcfeawoh .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#okkcfeawoh .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#okkcfeawoh .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#okkcfeawoh .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#okkcfeawoh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="6" class="gt_heading gt_title gt_font_normal">Ace Percentage and Serve Points Won Percentage: Mean, Median, SD, Q1, and Q3</td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Stratified by tour</td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="mean" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean</th>
+<th id="median" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">median</th>
+<th id="sd" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">sd</th>
+<th id="Q1" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Q1</th>
+<th id="Q3" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Q3</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="gt_group_heading_row odd">
+<th colspan="6" id="M" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">M</th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_1" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">ace_pct</th>
+<td class="gt_row gt_right" headers="M stub_1_1 mean">0.084</td>
+<td class="gt_row gt_right" headers="M stub_1_1 median">0.070</td>
+<td class="gt_row gt_right" headers="M stub_1_1 sd">0.064</td>
+<td class="gt_row gt_right" headers="M stub_1_1 Q1">0.037</td>
+<td class="gt_row gt_right" headers="M stub_1_1 Q3">0.116</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_2" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">serve_pts_won_pct</th>
+<td class="gt_row gt_right" headers="M stub_1_2 mean">0.642</td>
+<td class="gt_row gt_right" headers="M stub_1_2 median">0.644</td>
+<td class="gt_row gt_right" headers="M stub_1_2 sd">0.093</td>
+<td class="gt_row gt_right" headers="M stub_1_2 Q1">0.582</td>
+<td class="gt_row gt_right" headers="M stub_1_2 Q3">0.706</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="6" id="W" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">W</th>
+</tr>
+<tr class="gt_row_group_first odd">
+<th id="stub_1_3" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">ace_pct</th>
+<td class="gt_row gt_right" headers="W stub_1_3 mean">0.042</td>
+<td class="gt_row gt_right" headers="W stub_1_3 median">0.032</td>
+<td class="gt_row gt_right" headers="W stub_1_3 sd">0.043</td>
+<td class="gt_row gt_right" headers="W stub_1_3 Q1">0.013</td>
+<td class="gt_row gt_right" headers="W stub_1_3 Q3">0.061</td>
+</tr>
+<tr class="even">
+<th id="stub_1_4" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">serve_pts_won_pct</th>
+<td class="gt_row gt_right" headers="W stub_1_4 mean">0.571</td>
+<td class="gt_row gt_right" headers="W stub_1_4 median">0.571</td>
+<td class="gt_row gt_right" headers="W stub_1_4 sd">0.098</td>
+<td class="gt_row gt_right" headers="W stub_1_4 Q1">0.507</td>
+<td class="gt_row gt_right" headers="W stub_1_4 Q3">0.635</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This table illustrates the greater weight of serve performance on the Men's tour vs the Women's tour.</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean ace percentage is roughly double on the Men's tour (8.4% vs 4.2%).</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># On the Men's tour, even the bottom quartile wins most serve points (Q1 = 58.2%), a clear serve advantage.</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On the Women's tour, the bottom quartile is near break-even (Q1 = 50.7%), so the serve advantage nearly vanishes for lower-serving performances.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Find measures of center and spread for winner_pct and unforced_pct by round</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(round) <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(round) <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">c</span>(winner_pct, unforced_pct),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">list</span>(<span class="st">"mean"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"median"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">median</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"sd"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">sd</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Q1"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Q3"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.names =</span> <span class="st">"{.fn}.{.col}"</span>)) <span class="sc">|&gt;</span> <span class="co"># creates names from the variable and the statistic</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>round, <span class="co"># exclude round from the pivot</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"Statistic"</span>, <span class="st">"Variable"</span>),</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> Statistic,</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> value) <span class="sc">|&gt;</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">"round"</span>, <span class="at">rowname_col =</span> <span class="st">"Variable"</span>) <span class="sc">|&gt;</span> <span class="co"># organizes the Variable column by round and removes the "Variable" title</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> <span class="co"># rounds everything to 3 decimals</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Winner Percentage and Unforced Error Percentage: Mean, Median, SD, Q1, and Q3"</span>,</span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Stratified by round"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="hqhxgblgfm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hqhxgblgfm table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#hqhxgblgfm thead, #hqhxgblgfm tbody, #hqhxgblgfm tfoot, #hqhxgblgfm tr, #hqhxgblgfm td, #hqhxgblgfm th {
+  border-style: none;
+}
+
+#hqhxgblgfm p {
+  margin: 0;
+  padding: 0;
+}
+
+#hqhxgblgfm .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#hqhxgblgfm .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#hqhxgblgfm .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#hqhxgblgfm .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#hqhxgblgfm .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#hqhxgblgfm .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#hqhxgblgfm .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#hqhxgblgfm .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#hqhxgblgfm .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#hqhxgblgfm .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#hqhxgblgfm .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hqhxgblgfm .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#hqhxgblgfm .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#hqhxgblgfm .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#hqhxgblgfm .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hqhxgblgfm .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#hqhxgblgfm .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#hqhxgblgfm .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#hqhxgblgfm .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hqhxgblgfm .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#hqhxgblgfm .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hqhxgblgfm .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#hqhxgblgfm .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hqhxgblgfm .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hqhxgblgfm .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hqhxgblgfm .gt_left {
+  text-align: left;
+}
+
+#hqhxgblgfm .gt_center {
+  text-align: center;
+}
+
+#hqhxgblgfm .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#hqhxgblgfm .gt_font_normal {
+  font-weight: normal;
+}
+
+#hqhxgblgfm .gt_font_bold {
+  font-weight: bold;
+}
+
+#hqhxgblgfm .gt_font_italic {
+  font-style: italic;
+}
+
+#hqhxgblgfm .gt_super {
+  font-size: 65%;
+}
+
+#hqhxgblgfm .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#hqhxgblgfm .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#hqhxgblgfm .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#hqhxgblgfm .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#hqhxgblgfm .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#hqhxgblgfm .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#hqhxgblgfm .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#hqhxgblgfm .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#hqhxgblgfm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="6" class="gt_heading gt_title gt_font_normal">Winner Percentage and Unforced Error Percentage: Mean, Median, SD, Q1, and Q3</td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Stratified by round</td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="mean" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean</th>
+<th id="median" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">median</th>
+<th id="sd" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">sd</th>
+<th id="Q1" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Q1</th>
+<th id="Q3" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Q3</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="gt_group_heading_row odd">
+<th colspan="6" id="Q1" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Q1</th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_1" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="Q1 stub_1_1 mean">0.141</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_1 median">0.134</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_1 sd">0.063</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_1 Q1">0.099</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_1 Q3">0.186</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_2" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="Q1 stub_1_2 mean">0.192</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_2 median">0.186</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_2 sd">0.060</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_2 Q1">0.151</td>
+<td class="gt_row gt_right" headers="Q1 stub_1_2 Q3">0.225</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="6" id="Q2" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Q2</th>
+</tr>
+<tr class="gt_row_group_first odd">
+<th id="stub_1_3" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="Q2 stub_1_3 mean">0.143</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_3 median">0.149</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_3 sd">0.052</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_3 Q1">0.102</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_3 Q3">0.176</td>
+</tr>
+<tr class="even">
+<th id="stub_1_4" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="Q2 stub_1_4 mean">0.180</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_4 median">0.174</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_4 sd">0.060</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_4 Q1">0.142</td>
+<td class="gt_row gt_right" headers="Q2 stub_1_4 Q3">0.225</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<th colspan="6" id="Q3" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Q3</th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_5" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="Q3 stub_1_5 mean">0.147</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_5 median">0.145</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_5 sd">0.053</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_5 Q1">0.105</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_5 Q3">0.174</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_6" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="Q3 stub_1_6 mean">0.191</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_6 median">0.184</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_6 sd">0.078</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_6 Q1">0.139</td>
+<td class="gt_row gt_right" headers="Q3 stub_1_6 Q3">0.226</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="6" id="R128" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">R128</th>
+</tr>
+<tr class="gt_row_group_first odd">
+<th id="stub_1_7" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="R128 stub_1_7 mean">0.157</td>
+<td class="gt_row gt_right" headers="R128 stub_1_7 median">0.152</td>
+<td class="gt_row gt_right" headers="R128 stub_1_7 sd">0.060</td>
+<td class="gt_row gt_right" headers="R128 stub_1_7 Q1">0.115</td>
+<td class="gt_row gt_right" headers="R128 stub_1_7 Q3">0.195</td>
+</tr>
+<tr class="even">
+<th id="stub_1_8" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="R128 stub_1_8 mean">0.188</td>
+<td class="gt_row gt_right" headers="R128 stub_1_8 median">0.184</td>
+<td class="gt_row gt_right" headers="R128 stub_1_8 sd">0.062</td>
+<td class="gt_row gt_right" headers="R128 stub_1_8 Q1">0.146</td>
+<td class="gt_row gt_right" headers="R128 stub_1_8 Q3">0.225</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<th colspan="6" id="R64" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">R64</th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_9" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="R64 stub_1_9 mean">0.165</td>
+<td class="gt_row gt_right" headers="R64 stub_1_9 median">0.158</td>
+<td class="gt_row gt_right" headers="R64 stub_1_9 sd">0.064</td>
+<td class="gt_row gt_right" headers="R64 stub_1_9 Q1">0.119</td>
+<td class="gt_row gt_right" headers="R64 stub_1_9 Q3">0.203</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_10" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="R64 stub_1_10 mean">0.187</td>
+<td class="gt_row gt_right" headers="R64 stub_1_10 median">0.184</td>
+<td class="gt_row gt_right" headers="R64 stub_1_10 sd">0.063</td>
+<td class="gt_row gt_right" headers="R64 stub_1_10 Q1">0.143</td>
+<td class="gt_row gt_right" headers="R64 stub_1_10 Q3">0.227</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="6" id="R32" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">R32</th>
+</tr>
+<tr class="gt_row_group_first odd">
+<th id="stub_1_11" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="R32 stub_1_11 mean">0.165</td>
+<td class="gt_row gt_right" headers="R32 stub_1_11 median">0.157</td>
+<td class="gt_row gt_right" headers="R32 stub_1_11 sd">0.065</td>
+<td class="gt_row gt_right" headers="R32 stub_1_11 Q1">0.119</td>
+<td class="gt_row gt_right" headers="R32 stub_1_11 Q3">0.202</td>
+</tr>
+<tr class="even">
+<th id="stub_1_12" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="R32 stub_1_12 mean">0.188</td>
+<td class="gt_row gt_right" headers="R32 stub_1_12 median">0.183</td>
+<td class="gt_row gt_right" headers="R32 stub_1_12 sd">0.065</td>
+<td class="gt_row gt_right" headers="R32 stub_1_12 Q1">0.143</td>
+<td class="gt_row gt_right" headers="R32 stub_1_12 Q3">0.229</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<th colspan="6" id="R16" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">R16</th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_13" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="R16 stub_1_13 mean">0.167</td>
+<td class="gt_row gt_right" headers="R16 stub_1_13 median">0.160</td>
+<td class="gt_row gt_right" headers="R16 stub_1_13 sd">0.064</td>
+<td class="gt_row gt_right" headers="R16 stub_1_13 Q1">0.125</td>
+<td class="gt_row gt_right" headers="R16 stub_1_13 Q3">0.204</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_14" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="R16 stub_1_14 mean">0.180</td>
+<td class="gt_row gt_right" headers="R16 stub_1_14 median">0.178</td>
+<td class="gt_row gt_right" headers="R16 stub_1_14 sd">0.062</td>
+<td class="gt_row gt_right" headers="R16 stub_1_14 Q1">0.137</td>
+<td class="gt_row gt_right" headers="R16 stub_1_14 Q3">0.218</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="6" id="QF" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">QF</th>
+</tr>
+<tr class="gt_row_group_first odd">
+<th id="stub_1_15" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="QF stub_1_15 mean">0.169</td>
+<td class="gt_row gt_right" headers="QF stub_1_15 median">0.161</td>
+<td class="gt_row gt_right" headers="QF stub_1_15 sd">0.062</td>
+<td class="gt_row gt_right" headers="QF stub_1_15 Q1">0.126</td>
+<td class="gt_row gt_right" headers="QF stub_1_15 Q3">0.204</td>
+</tr>
+<tr class="even">
+<th id="stub_1_16" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="QF stub_1_16 mean">0.179</td>
+<td class="gt_row gt_right" headers="QF stub_1_16 median">0.175</td>
+<td class="gt_row gt_right" headers="QF stub_1_16 sd">0.060</td>
+<td class="gt_row gt_right" headers="QF stub_1_16 Q1">0.137</td>
+<td class="gt_row gt_right" headers="QF stub_1_16 Q3">0.217</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<th colspan="6" id="RR" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">RR</th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_17" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="RR stub_1_17 mean">0.165</td>
+<td class="gt_row gt_right" headers="RR stub_1_17 median">0.162</td>
+<td class="gt_row gt_right" headers="RR stub_1_17 sd">0.060</td>
+<td class="gt_row gt_right" headers="RR stub_1_17 Q1">0.124</td>
+<td class="gt_row gt_right" headers="RR stub_1_17 Q3">0.201</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_18" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="RR stub_1_18 mean">0.175</td>
+<td class="gt_row gt_right" headers="RR stub_1_18 median">0.170</td>
+<td class="gt_row gt_right" headers="RR stub_1_18 sd">0.059</td>
+<td class="gt_row gt_right" headers="RR stub_1_18 Q1">0.134</td>
+<td class="gt_row gt_right" headers="RR stub_1_18 Q3">0.210</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="6" id="SF" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">SF</th>
+</tr>
+<tr class="gt_row_group_first odd">
+<th id="stub_1_19" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="SF stub_1_19 mean">0.167</td>
+<td class="gt_row gt_right" headers="SF stub_1_19 median">0.163</td>
+<td class="gt_row gt_right" headers="SF stub_1_19 sd">0.059</td>
+<td class="gt_row gt_right" headers="SF stub_1_19 Q1">0.125</td>
+<td class="gt_row gt_right" headers="SF stub_1_19 Q3">0.201</td>
+</tr>
+<tr class="even">
+<th id="stub_1_20" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="SF stub_1_20 mean">0.174</td>
+<td class="gt_row gt_right" headers="SF stub_1_20 median">0.169</td>
+<td class="gt_row gt_right" headers="SF stub_1_20 sd">0.060</td>
+<td class="gt_row gt_right" headers="SF stub_1_20 Q1">0.132</td>
+<td class="gt_row gt_right" headers="SF stub_1_20 Q3">0.209</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<th colspan="6" id="F" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">F</th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_21" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">winner_pct</th>
+<td class="gt_row gt_right" headers="F stub_1_21 mean">0.164</td>
+<td class="gt_row gt_right" headers="F stub_1_21 median">0.159</td>
+<td class="gt_row gt_right" headers="F stub_1_21 sd">0.057</td>
+<td class="gt_row gt_right" headers="F stub_1_21 Q1">0.124</td>
+<td class="gt_row gt_right" headers="F stub_1_21 Q3">0.198</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_22" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">unforced_pct</th>
+<td class="gt_row gt_right" headers="F stub_1_22 mean">0.179</td>
+<td class="gt_row gt_right" headers="F stub_1_22 median">0.174</td>
+<td class="gt_row gt_right" headers="F stub_1_22 sd">0.061</td>
+<td class="gt_row gt_right" headers="F stub_1_22 Q1">0.135</td>
+<td class="gt_row gt_right" headers="F stub_1_22 Q3">0.218</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This table examines whether play "quality" shifts from qualifying rounds through the final.</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Winner percentage rises gradually from qualifying (~14%) to a plateau around the QF-SF (~16.7%).</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Unforced error percentage drifts slightly downward, from ~19% in qualifying to ~17.4-17.9% in later rounds.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="eda-plots" class="level2">
+<h2 class="anchored" data-anchor-id="eda-plots">4. EDA Plots</h2>
+<ul>
+<li>Create a bar chart for surface</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> CombinedData <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(surface), <span class="fu">aes</span>(<span class="at">x =</span> surface, <span class="at">fill =</span> surface))</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> var_labels[[<span class="st">"surface"</span>]], <span class="co"># reference corresponding label</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Count of Charted Matches by"</span>, var_labels[[<span class="st">"surface"</span>]])) <span class="sc">+</span> </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># centering the title</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="co"># remove redundant legend</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project_2_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The majority of matches in the dataset are played on hard court, followed by clay and then grass.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Create a side-by-side bar chart for tour and handed</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> CombinedData <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(tour, handed), <span class="fu">aes</span>(<span class="at">x =</span> tour, <span class="at">fill =</span> handed))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> var_labels[[<span class="st">"tour"</span>]], </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Count of Charted Matches by"</span>, var_labels[[<span class="st">"tour"</span>]], <span class="st">"and"</span>, var_labels[[<span class="st">"handed"</span>]])) <span class="sc">+</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(var_labels[[<span class="st">"handed"</span>]]) <span class="sc">+</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project_2_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right-handed players outnumber left-handed players, with no notable difference in representation between Men's and Women's tours</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Create a histogram for year, faceted by tour</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(CombinedData <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(year, tour), <span class="fu">aes</span>(<span class="at">x =</span> year))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="fu">aes</span>(<span class="at">fill =</span> tour)) <span class="sc">+</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> tour) <span class="sc">+</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> var_labels[[<span class="st">"year"</span>]],</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> var_labels[[<span class="st">"tour"</span>]],</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Charted Match"</span>, var_labels[[<span class="st">"year"</span>]]),</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Faceted by"</span>, var_labels[[<span class="st">"tour"</span>]])) <span class="sc">+</span> </span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Centers the title and subtitle</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="co"># remove redundant legend</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project_2_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The majority of matches in the dataset are from the early 2010's and later</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Overall, there are more men's matches than women's matches by about 2:1</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># However prior to the 2010's, men's matches outnumber women's matches by more than</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: this data is only representative of the specific matches charted in the dataset (i.e. not a comprehensive representation of the history of professional tennis)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Create a side-by-side box plot for return_pts_won_pct by surface</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(CombinedData <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(return_pts_won_pct, surface))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> surface, <span class="at">y =</span> return_pts_won_pct, <span class="at">fill =</span> surface)) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> var_labels[[<span class="st">"surface"</span>]], <span class="co"># reference corresponding label for surface</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> var_labels[[<span class="st">"return_pts_won_pct"</span>]],</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">paste</span>(var_labels[[<span class="st">"return_pts_won_pct"</span>]], <span class="st">"by"</span>, var_labels[[<span class="st">"surface"</span>]])) <span class="sc">+</span> </span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Centers the title</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="co"># remove redundant legend</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project_2_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The data indicates that Winning return points is more difficult on grass and less difficult on clay.</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This aligns with expectations.  Clay courts have high and slower bounces while grass courts have low and skidding bounces, affecting return difficulty.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Create a scatter plot for winners_pct vs unforced_pct by tour</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">drop_na</span>(winner_pct, unforced_pct, tour),</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> winner_pct, <span class="at">y =</span> unforced_pct, <span class="at">color =</span> tour))</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">0.9</span>) <span class="sc">+</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> var_labels[[<span class="st">"winner_pct"</span>]],</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> var_labels[[<span class="st">"unforced_pct"</span>]],</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">paste</span>(var_labels[[<span class="st">"unforced_pct"</span>]], <span class="st">"vs"</span>, var_labels[[<span class="st">"winner_pct"</span>]], <span class="st">"by"</span>, var_labels[[<span class="st">"tour"</span>]]),</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> var_labels[[<span class="st">"tour"</span>]]) <span class="sc">+</span> </span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="co"># Centers the title</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project_2_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The men's tour tends to have a slightly higher percentage of points ending in winners than the women's tour</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This is likely in large part due to an increased frequency of aces (which are counted as winners in tennis statistics)</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># There is no obvious different in percentage of points ending in unforced errors.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Create a radar chart for Rafael Nadal vs John Isner comparing means for the following variables: total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct, aggression_pct, fh_eff_pct, and bf_eff_pct</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># first let's create a new table containing the means of the variables of interest, grouped by player</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>player_means <span class="ot">&lt;-</span> CombinedData <span class="sc">|&gt;</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(player) <span class="sc">|&gt;</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                     aggression_pct, fh_eff_pct, bh_eff_pct),</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="co"># calculates the mean of each variable by player</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="fu">n</span>()) <span class="co"># adds n, the qty of matches per player </span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="co"># radarchart() will need to know the min and max of each variable for scaling purposes, so let's take a look</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(player_means)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       player     total_won_pct       ace_pct        serve_pts_won_pct
+ Length   :1728   Min.   :0.1429   Min.   :0.00000   Min.   :0.1724   
+ N.unique :1728   1st Qu.:0.4329   1st Qu.:0.01875   1st Qu.:0.5185   
+ N.blank  :   0   Median :0.4702   Median :0.04012   Median :0.5738   
+ Min.nchar:   5   Mean   :0.4674   Mean   :0.04932   Mean   :0.5661   
+ Max.nchar:  35   3rd Qu.:0.5006   3rd Qu.:0.06893   3rd Qu.:0.6229   
+                  Max.   :0.7778   Max.   :0.28125   Max.   :0.9231   
+ return_pts_won_pct aggression_pct     fh_eff_pct           bh_eff_pct      
+ Min.   :0.05882    Min.   :0.1161   Min.   :-0.2678571   Min.   :-0.21875  
+ 1st Qu.:0.31495    1st Qu.:0.2965   1st Qu.:-0.0429158   1st Qu.:-0.05590  
+ Median :0.36187    Median :0.3339   Median :-0.0192802   Median :-0.03743  
+ Mean   :0.36409    Mean   :0.3348   Mean   :-0.0225082   Mean   :-0.03983  
+ 3rd Qu.:0.41511    3rd Qu.:0.3713   3rd Qu.: 0.0005994   3rd Qu.:-0.02136  
+ Max.   :0.82759    Max.   :0.6019   Max.   : 0.1269841   Max.   : 0.07042  
+       n         
+ Min.   :  1.00  
+ 1st Qu.:  1.00  
+ Median :  2.00  
+ Mean   : 13.44  
+ 3rd Qu.: 10.00  
+ Max.   :721.00  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># there are some outlier values here, most likely due to low n for those players</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># let's revisit while filtering out players with less than 10 matches observed</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>player_means <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       player    total_won_pct       ace_pct         serve_pts_won_pct
+ Length   :445   Min.   :0.4157   Min.   :0.001094   Min.   :0.4591   
+ N.unique :445   1st Qu.:0.4722   1st Qu.:0.032372   1st Qu.:0.5656   
+ N.blank  :  0   Median :0.4885   Median :0.053070   Median :0.5996   
+ Min.nchar:  5   Mean   :0.4887   Mean   :0.061518   Mean   :0.5982   
+ Max.nchar: 27   3rd Qu.:0.5053   3rd Qu.:0.084383   3rd Qu.:0.6329   
+                 Max.   :0.5691   Max.   :0.224827   Max.   :0.7108   
+ return_pts_won_pct aggression_pct     fh_eff_pct          bh_eff_pct      
+ Min.   :0.2465     Min.   :0.2316   Min.   :-0.069775   Min.   :-0.08694  
+ 1st Qu.:0.3383     1st Qu.:0.3197   1st Qu.:-0.025546   1st Qu.:-0.04535  
+ Median :0.3750     Median :0.3437   Median :-0.014189   Median :-0.03492  
+ Mean   :0.3771     Mean   :0.3465   Mean   :-0.014202   Mean   :-0.03497  
+ 3rd Qu.:0.4179     3rd Qu.:0.3731   3rd Qu.:-0.001986   3rd Qu.:-0.02589  
+ Max.   :0.5023     Max.   :0.4995   Max.   : 0.043287   Max.   : 0.02044  
+       n         
+ Min.   : 10.00  
+ 1st Qu.: 14.00  
+ Median : 24.00  
+ Mean   : 45.22  
+ 3rd Qu.: 48.00  
+ Max.   :721.00  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the above provides a much more reasonable picture</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># now we can manually construct a radar_bounds dataframe, rounding where desired</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># this code will also exist in helpers.R for use later</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>radar_bounds <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">total_won_pct      =</span> <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.40</span>),</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ace_pct            =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.00</span>),</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">serve_pts_won_pct  =</span> <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">0.45</span>),</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">return_pts_won_pct =</span> <span class="fu">c</span>(<span class="fl">0.55</span>, <span class="fl">0.20</span>),</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">aggression_pct     =</span> <span class="fu">c</span>(<span class="fl">0.50</span>, <span class="fl">0.20</span>),</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">fh_eff_pct         =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="sc">-</span><span class="fl">0.08</span>),</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">bh_eff_pct         =</span> <span class="fu">c</span>(<span class="fl">0.03</span>, <span class="sc">-</span><span class="fl">0.10</span>)</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(radar_bounds) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"max"</span>, <span class="st">"min"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now make a function to build the df that feeds radarchart()</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this will also live in helpers.R</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>build_radar_data <span class="ot">&lt;-</span> <span class="cf">function</span>(data, player_a, player_b) {</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  player_rows <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="co"># getting the player data</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(player <span class="sc">%in%</span> <span class="fu">c</span>(player_a, player_b)) <span class="sc">|&gt;</span> <span class="co"># select the two players</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(player) <span class="sc">|&gt;</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>                       aggression_pct, fh_eff_pct, bh_eff_pct),</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>                     <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),<span class="co"># calculating the means of each variable for each player</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>              ) <span class="sc">|&gt;</span> </span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="co"># radarchart() needs data.frame format</span></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(player_rows) <span class="ot">&lt;-</span> player_rows<span class="sc">$</span>player <span class="co"># add the players as row names, which is how radarchart() will get these labels</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>  player_rows<span class="sc">$</span>player <span class="ot">&lt;-</span> <span class="cn">NULL</span> <span class="co"># column of player names no longer needed</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">rbind</span>(radar_bounds, player_rows) <span class="co"># combine the variable min/max with the player data into one data frame</span></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(out) <span class="ot">&lt;-</span> radar_labels[<span class="fu">colnames</span>(out)] <span class="co"># uses the proper variable labels from radar_labels in helpers.R</span></span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>  out <span class="co"># return out</span></span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a><span class="co"># run function for the two players of interest</span></span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>radardata<span class="ot">&lt;-</span><span class="fu">build_radar_data</span>(CombinedData, <span class="st">"Rafael Nadal"</span>, <span class="st">"John Isner"</span>)</span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>radardata</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Total Won %      Ace % Serve Won % Return Won % Aggression %
+max            0.6000000 0.25000000   0.7500000    0.5500000    0.5000000
+min            0.4000000 0.00000000   0.4500000    0.2000000    0.2000000
+John Isner     0.4868407 0.20405651   0.6985597    0.2680703    0.4175887
+Rafael Nadal   0.5345452 0.04372124   0.6673929    0.4091527    0.2929399
+             FH Effect. % BH Effect. %
+max            0.05000000   0.03000000
+min           -0.08000000  -0.10000000
+John Isner    -0.02143612  -0.04264725
+Rafael Nadal   0.01941294  -0.02021050</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># narrow margins for less white space</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">radarchart</span>(radardata,</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">vlcex =</span> <span class="fl">0.8</span>, <span class="co"># scales label text size</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">pcol =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="co"># applies colors</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">pfcol =</span> <span class="fu">c</span>(<span class="fu">adjustcolor</span>(<span class="st">"red"</span>, <span class="at">alpha.f =</span> <span class="fl">0.3</span>), <span class="co"># applies fill colors with transparency</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">adjustcolor</span>(<span class="st">"blue"</span>, <span class="at">alpha.f =</span> <span class="fl">0.3</span>)), </span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">plwd =</span> <span class="dv">2</span>, <span class="co"># line width</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">plty =</span> <span class="dv">1</span>, <span class="co"># solid lines</span></span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">cglcol =</span> <span class="st">"grey"</span>, <span class="co"># grid line color</span></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">cglty =</span> <span class="dv">1</span>, <span class="co"># solid grid line</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">cglwd =</span> <span class="fl">0.5</span>, <span class="co"># grid line width</span></span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"Mean Metrics Across All Charted Matches"</span>)</span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="co"># build legend in top right</span></span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">rownames</span>(radardata)[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)],   <span class="co"># drop max/min rows</span></span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="co"># legend colors</span></span>
+<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">4</span>, <span class="co"># legend line width</span></span>
+<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="co"># remove legend border box</span></span>
+<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex =</span> <span class="fl">0.8</span>) <span class="co"># scale legend text size</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project_2_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In the dashboard, it would be good to have a table of this data below the radarchart</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a function to build this radar chart companion table </span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co"># this will also live in helpers.R</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>build_radar_table <span class="ot">&lt;-</span> <span class="cf">function</span>(data, player_a, player_b) {</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(player <span class="sc">%in%</span> <span class="fu">c</span>(player_a, player_b)) <span class="sc">|&gt;</span> <span class="co"># filters for the two players</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(player) <span class="sc">|&gt;</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>              <span class="fu">across</span>(<span class="fu">c</span>(total_won_pct, ace_pct, serve_pts_won_pct, return_pts_won_pct,</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>                       aggression_pct, fh_eff_pct, bh_eff_pct),</span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>                     <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(<span class="sc">~</span> var_labels[.x], <span class="at">.cols =</span> <span class="sc">-</span><span class="fu">c</span>(player, n)) <span class="sc">|&gt;</span> <span class="co"># use var_labels for renaming all variables except n and player</span></span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">Player =</span> player, <span class="st">`</span><span class="at">Charted Matches</span><span class="st">`</span> <span class="ot">=</span> n) <span class="co"># manually renaming n and player</span></span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a><span class="fu">build_radar_table</span>(CombinedData, <span class="st">"Rafael Nadal"</span>, <span class="st">"John Isner"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span><span class="fu">c</span>(Player, <span class="st">`</span><span class="at">Charted Matches</span><span class="st">`</span>), <span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Mean Player Metrics"</span>,</span>
+<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"Across All Charted Matches"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="cyrcbkfbcg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cyrcbkfbcg table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#cyrcbkfbcg thead, #cyrcbkfbcg tbody, #cyrcbkfbcg tfoot, #cyrcbkfbcg tr, #cyrcbkfbcg td, #cyrcbkfbcg th {
+  border-style: none;
+}
+
+#cyrcbkfbcg p {
+  margin: 0;
+  padding: 0;
+}
+
+#cyrcbkfbcg .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#cyrcbkfbcg .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#cyrcbkfbcg .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#cyrcbkfbcg .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#cyrcbkfbcg .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#cyrcbkfbcg .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#cyrcbkfbcg .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#cyrcbkfbcg .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#cyrcbkfbcg .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#cyrcbkfbcg .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#cyrcbkfbcg .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#cyrcbkfbcg .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#cyrcbkfbcg .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#cyrcbkfbcg .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#cyrcbkfbcg .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cyrcbkfbcg .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#cyrcbkfbcg .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#cyrcbkfbcg .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#cyrcbkfbcg .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cyrcbkfbcg .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#cyrcbkfbcg .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cyrcbkfbcg .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#cyrcbkfbcg .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cyrcbkfbcg .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cyrcbkfbcg .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cyrcbkfbcg .gt_left {
+  text-align: left;
+}
+
+#cyrcbkfbcg .gt_center {
+  text-align: center;
+}
+
+#cyrcbkfbcg .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#cyrcbkfbcg .gt_font_normal {
+  font-weight: normal;
+}
+
+#cyrcbkfbcg .gt_font_bold {
+  font-weight: bold;
+}
+
+#cyrcbkfbcg .gt_font_italic {
+  font-style: italic;
+}
+
+#cyrcbkfbcg .gt_super {
+  font-size: 65%;
+}
+
+#cyrcbkfbcg .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#cyrcbkfbcg .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#cyrcbkfbcg .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#cyrcbkfbcg .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#cyrcbkfbcg .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#cyrcbkfbcg .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#cyrcbkfbcg .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#cyrcbkfbcg .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#cyrcbkfbcg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="9" class="gt_heading gt_title gt_font_normal">Mean Player Metrics</td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="9" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Across All Charted Matches</td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="Player" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Player</th>
+<th id="Charted-Matches" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Charted Matches</th>
+<th id="Total-Points-Won-%" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total Points Won %</th>
+<th id="Ace-%" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Ace %</th>
+<th id="Serve-Points-Won-%" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Serve Points Won %</th>
+<th id="Return-Points-Won-%" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Return Points Won %</th>
+<th id="Aggression-%" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Aggression %</th>
+<th id="Forehand-Effectiveness-%" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Forehand Effectiveness %</th>
+<th id="Backhand-Effectiveness-%" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Backhand Effectiveness %</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Player">John Isner</td>
+<td class="gt_row gt_right" headers="Charted Matches">87</td>
+<td class="gt_row gt_right" headers="Total Points Won %">0.487</td>
+<td class="gt_row gt_right" headers="Ace %">0.204</td>
+<td class="gt_row gt_right" headers="Serve Points Won %">0.699</td>
+<td class="gt_row gt_right" headers="Return Points Won %">0.268</td>
+<td class="gt_row gt_right" headers="Aggression %">0.418</td>
+<td class="gt_row gt_right" headers="Forehand Effectiveness %">−0.021</td>
+<td class="gt_row gt_right" headers="Backhand Effectiveness %">−0.043</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Player">Rafael Nadal</td>
+<td class="gt_row gt_right" headers="Charted Matches">424</td>
+<td class="gt_row gt_right" headers="Total Points Won %">0.535</td>
+<td class="gt_row gt_right" headers="Ace %">0.044</td>
+<td class="gt_row gt_right" headers="Serve Points Won %">0.667</td>
+<td class="gt_row gt_right" headers="Return Points Won %">0.409</td>
+<td class="gt_row gt_right" headers="Aggression %">0.293</td>
+<td class="gt_row gt_right" headers="Forehand Effectiveness %">0.019</td>
+<td class="gt_row gt_right" headers="Backhand Effectiveness %">−0.020</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
