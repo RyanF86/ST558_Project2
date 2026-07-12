@@ -42,7 +42,8 @@ var_labels <- c(
   fh_eff_pct         = "Forehand Effectiveness %",
   bh_eff_pct         = "Backhand Effectiveness %",
   aggression_pct     = "Aggression %",
-  round_group        = "Round Group"
+  round_group        = "Round Group",
+  match_id           = "Match ID"
 )
 
 # truncated labels just for the radar chart 
@@ -184,16 +185,16 @@ subset_vars <- c(
 # note: to keep these sliders reasonable, some of these ranges will exclude the longest match in tennis history https://en.wikipedia.org/wiki/Isner%E2%80%93Mahut_match_at_the_2010_Wimbledon_Championships
 slider_ranges <- list(
   year       = list(min = 1960, max = 2026, step = 1),
-  total_pts  = list(min = 10,    max = 570,  step = 10),
-  aces  = list(min = 0,    max = 60,  step = 5),
-  winners  = list(min = 0,    max = 130,  step = 5),
-  unforced  = list(min = 0,    max = 90,  step = 5)
+  total_pts  = list(min = 13,    max = 569,  step = 1),
+  aces  = list(min = 0,    max = 53,  step = 1),
+  winners  = list(min = 0,    max = 130,  step = 1),
+  unforced  = list(min = 0,    max = 118,  step = 1)
 )
 
 # Load .rds data
 CombinedData <- readRDS("CombinedData.rds")
 
-# Make list of eligible players for comparison 
+# Make list of eligible player names for comparison 
 eligible_players <- CombinedData |>
   count(player) |>
   filter(n >= 1) |> # currently allowing all players regardless of matches, but may reconsider

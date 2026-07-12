@@ -49,7 +49,90 @@ ui <- fluidPage(
         id = "main_tabs",
         
         tabPanel("About",
-
+                 
+                 h2("About the Data:"),
+                 br(),
+                 #insert images
+                 div(style = "display: flex; gap: 10px; justify-content: center;",
+                     img(src = "ATP-Logo.png", height = "100px"),
+                     img(src = "WTA-Logo.png", height = "100px")
+                 ),
+                 br(),
+                 p("The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at the ",
+                   a("Match Charting Project", # creating hyperlink
+                     href = "https://github.com/JeffSackmann/tennis_MatchChartingProject",
+                     target = "_blank"), # opens in new tab
+                   " GitHub repository. The MCP aims to build a detailed public record of professional tennis matches (ATP and WTA Tours).",
+                   "MCP data covers over 11,000 men's and women's singles matches including both match summary statistics and shot-by-shot detail. ",
+                   "The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the match summary data, retrieved on 7/6/2026.  ",
+                   "Note:  This is not a comprehensive dataset of all professional tennis matches. ",
+                   "Because charting is done by individual volunteer contributors, the data tends to over-represent the biggest tournaments and the most popular players."
+                 ),
+                 
+                 h3("Description of Variables:"),
+                 p("Most variable names are self-explanatory to anyone familiar with the basics of tennis, so they are not all listed here. A few points are worth clarifying:"),
+                 tags$ul( # bullet list
+                   tags$li(
+                     tags$b("Percentage variables"), 
+                     " were created to normalize metrics across match length. Fifteen aces in a short match means something different than fifteen aces in a long one, so raw counts can mislead. For example, ",
+                     tags$b("Ace %"), " is the share of a player's service points that were aces, and ",
+                     tags$b("Forehand Winner %"), " is the share of total points that ended with the player hitting a forehand winner."
+                   ),
+                   tags$li(
+                     tags$b("Aggression %"), 
+                     " is a custom metric created for this analysis (not a standard tennis statistic). It is the sum of Winner % and Unforced Error %. A higher value indicates a more aggressive style."
+                   ),
+                   tags$li(
+                     tags$b("Forehand Effectiveness %"), " and ", tags$b("Backhand Effectiveness %"), 
+                     " are also custom metrics. Each representing Forehand/Backhand Winner % minus its Unforced Error %. A positive value means the shot produces more winners than errors."
+                   )
+                 ),
+                 
+                 h3("How to Use:"),
+                 tags$ol( # numbered list
+                   tags$li(
+                     "Use the ", tags$b("sidebar"), " to subset the data. Select the desired categorical levels and numeric ranges, then click the ", 
+                     tags$b("Subset the Data!"), " button to pull a subset from the 23,230 match summary results. All tabs will reflect the current subset and update when this button is clicked."
+                   ),
+                   tags$li(
+                     "The ", tags$b("Data Download"), " tab displays a table of the subset. Click column headers to sort ascending or descending, and use the search box to filter further. Click the ", 
+                     tags$b("Download Data"), " button at the bottom to save the table as a .csv file."
+                   ),
+                   tags$li(
+                     "The ", tags$b("Data Exploration"), " tab investigates the subset in more depth, across three sub-tabs:",
+                     tags$ul( # bullet list
+                       tags$li(
+                         tags$b("Categorical Summaries"), 
+                         " — select one or two categorical variables to display bar charts and a counts table."
+                       ),
+                       tags$li(
+                         tags$b("Numeric Summaries"), 
+                         " — select one or two numeric variables, plus an optional categorical variable to group by. With one variable, a box plot and histogram are shown.  With two variables, a scatter plot is shown. A summary table of center and spread is shown below the plots."
+                       ),
+                       tags$li(
+                         tags$b("Player Comparison"), 
+                         " — select one or two players to display a radar chart and summary table of their average performance metrics across the subset."
+                       )
+                     )
+                   )
+                 ),
+                 
+                 h3("Other Notes:"),
+                 tags$ul(
+                   tags$li(
+                     "The ", 
+                     a("Isner–Mahut match at the 2010 Wimbledon Championships", 
+                       href = "https://en.wikipedia.org/wiki/Isner%E2%80%93Mahut_match_at_the_2010_Wimbledon_Championships",
+                       target = "_blank"),
+                     " is excluded from the data. At 980 total points (versus 569 for the next-longest charted match), it is such an extreme outlier that including it would stretch the numeric subsetting sliders to the point of being unusable."
+                   ),
+                   tags$li(
+                     "The Player Comparison tab averages each metric across all of a player's matches within the current subset. Averages built on only a few matches can be misleading. The number of charted matches per player is shown in the table below the radar chart, and a warning appears when a player has fewer than five."
+                   ),
+                   tags$li(
+                     "Because the Match Charting Project is crowdsourced, the data over-represents the biggest tournaments and the most popular players. All summaries describe the charted sample, not the full population of professional tennis matches."
+                   )
+                 ),                 
         ),
         
         tabPanel("Data Download",
@@ -75,11 +158,13 @@ ui <- fluidPage(
                             # Display Contingency Table (for 1 categorical)
                             conditionalPanel(
                               condition = "input.categorical_second == 'None' | input.categorical_second == input.categorical_first",
+                              br(),
                               gt_output("contingency_one")
                               ),
                             # Display Two-Way Contingency Table (for 2 categorical)
                             conditionalPanel(
                               condition = "input.categorical_second != 'None'",
+                              br(),
                               gt_output("contingency_two")
                               )
                             ),
@@ -95,6 +180,7 @@ ui <- fluidPage(
                             # Display Histogram (for 1 numerical), optional faceting
                             conditionalPanel(
                               condition = "input.numeric_second == 'None' | input.numeric_second == input.numeric_first",
+                              br(),
                               plotOutput("histogram")
                             ),                            
                             # Display Scatter Plot (for 2 numerical), optional coloring
@@ -104,15 +190,17 @@ ui <- fluidPage(
                             ),                            
 
                             # Display Numeric Summary
+                            br(),
                             gt_output("numeric_summary")
-                            
                             ),
                    
                    tabPanel("Player Comparison", # since there are so many options for the player dropdown, this will be updated on the server side instead
                             selectizeInput(inputId = "first_player", label = "First Player", choices = NULL), # see updateSelectizeInput() on server
                             selectizeInput(inputId = "second_player", label = "Second Player", choices = NULL), # see updateSelectizeInput() on server
                             plotOutput("radar"), # display radar chart
-                            textOutput("radar_warning"), # display warnings, if applicable
+                            br(),
+                            uiOutput("radar_warning"), # display warnings, if applicable
+                            br(),
                             gt_output("player_table") # display player table
                             )
                             
@@ -137,7 +225,8 @@ server <- function(input, output, session) {
                 min = rng$min,
                 max = rng$max,
                 value = c(rng$min, rng$max), # selection starts at full range
-                step = rng$step) 
+                step = rng$step,
+                sep = "") # removes thousands comma
   })
   output$slider_second <- renderUI({
     rng <- slider_ranges[[input$num_subset_second]]
@@ -146,7 +235,8 @@ server <- function(input, output, session) {
                 min = rng$min,
                 max = rng$max,
                 value = c(rng$min, rng$max),
-                step = rng$step)
+                step = rng$step,
+                sep = "") # removes thousands comma
   })
   
   # Create subset on sample_btn
@@ -172,7 +262,11 @@ server <- function(input, output, session) {
   })
   
   # Data Table
-  output$data_table <- renderDataTable(mysubset())
+  output$data_table <- DT::renderDataTable({
+    tabledata <- mysubset()
+    DT::datatable(tabledata, colnames = unname(var_labels[names(tabledata)])) |> # use var_labels for the column names
+      DT::formatRound(columns = grep("_pct$", names(tabledata)), digits = 3) # cap at 3 decimals
+  })
   
   # Download Data
   output$download_data <- downloadHandler(
@@ -267,7 +361,7 @@ server <- function(input, output, session) {
              title = paste(var_labels[[input$numeric_first]], "by", 
                            var_labels[[input$numeric_group_by]])) +
         theme(plot.title = element_text(hjust = 0.5),
-              legend.position = "none")
+              legend.position = "none") # no legend needed
     }
   })
 
@@ -277,7 +371,7 @@ server <- function(input, output, session) {
     histdata <- mysubset() |> drop_na(.data[[input$numeric_first]]) # drop na here, then use boxdata for both options 
     if (input$numeric_group_by == "None") { # simple histogram, no faceting
       ggplot(histdata, aes(x = .data[[input$numeric_first]])) +
-        geom_histogram(bins = 30) +
+        geom_histogram(bins = 30) + # 30 bin histogram
         labs(x = var_labels[[input$numeric_first]],
              title = var_labels[[input$numeric_first]]) +
         theme(plot.title = element_text(hjust = 0.5))
@@ -293,7 +387,7 @@ server <- function(input, output, session) {
              subtitle = paste("Faceted by", var_labels[[input$numeric_group_by]])) + 
         theme(plot.title = element_text(hjust = 0.5),
               plot.subtitle = element_text(hjust = 0.5),
-              legend.position = "none")
+              legend.position = "none") # no legend needed
     }
   })
   
@@ -345,8 +439,10 @@ server <- function(input, output, session) {
                        list(mean   = ~ mean(.x, na.rm = TRUE),
                             median = ~ median(.x, na.rm = TRUE),
                             sd     = ~ sd(.x, na.rm = TRUE),
+                            min    = ~ min(.x, na.rm = TRUE),
                             Q1     = ~ quantile(.x, 0.25, na.rm = TRUE),
-                            Q3     = ~ quantile(.x, 0.75, na.rm = TRUE)),
+                            Q3     = ~ quantile(.x, 0.75, na.rm = TRUE),
+                            max    = ~ max(.x, na.rm = TRUE)),
                        .names = "{.fn}.{.col}"),
                 .groups = "drop") |> # removes grouping if present
       pivot_longer(cols = contains("."),
@@ -413,11 +509,11 @@ server <- function(input, output, session) {
   })
   
   # Warning for small radar chart sample sizes (n < 5)
-  output$radar_warning <- renderText({
+  output$radar_warning <- renderUI({
     req(input$first_player) # proceed if first player has been chosen
     counts <- player_counts()
     msgs <- character(0) # msgs initialized
-    if (counts$first > 0 && counts$first < 5) {
+    if (counts$first > 0 && counts$first < 5) { 
       msgs <- c(msgs, paste0(input$first_player, " has only ", counts$first, 
                              " charted match(es) under the current filters — interpret with caution."))
     }
@@ -426,7 +522,10 @@ server <- function(input, output, session) {
       msgs <- c(msgs, paste0(input$second_player, " has only ", counts$second, 
                              " charted match(es) under the current filters — interpret with caution."))
     }
-    msgs # assembles and returns the message
+    
+    if (length(msgs) == 0) return(NULL)   # nothing shows when no warning
+    div(style = "background-color: #FFF3CD; padding: 8px; border-radius: 4px; border: 1px solid #FFE69C;", # adds yellow highlight
+        HTML(paste(msgs, collapse = "<br>"))) 
   })
   
   # Player Data Table
@@ -440,8 +539,6 @@ server <- function(input, output, session) {
   })
   
 }
-
-
 
 # Run the application 
 shinyApp(ui = ui, server = server)

@@ -19,7 +19,7 @@ source("helpers.R")
 
 ## 1. Description of Dataset
 
-The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <https://github.com/JeffSackmann/tennis_MatchChartingProject.git>. The MCP aims to build a detailed public record of professional tennis matches. MCP data covers over 11,000 singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the summary data.  Note:  This is not a comprehensive dataset of all professional tennis matches. Because charting is done by individual volunteer contributors, the data tends to over-represent the biggest tournaments and the most popular players.
+The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <https://github.com/JeffSackmann/tennis_MatchChartingProject.git>. The MCP aims to build a detailed public record of professional tennis matches (ATP and WTA Tours). MCP data covers over 11,000 men's and women's singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the match summary data, retrieved on 7/6/2026.  Note:  This is not a comprehensive dataset of all professional tennis matches. Because charting is done by individual volunteer contributors, the data tends to over-represent the biggest tournaments and the most popular players.
 
 Four raw data .csv files are downloaded from the GitHub repo and placed in `RawData/`:
 

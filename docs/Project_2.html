@@ -149,7 +149,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="description-of-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="description-of-dataset">1. Description of Dataset</h2>
-<p>The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <a href="https://github.com/JeffSackmann/tennis_MatchChartingProject.git" class="uri">https://github.com/JeffSackmann/tennis_MatchChartingProject.git</a>. The MCP aims to build a detailed public record of professional tennis matches. MCP data covers over 11,000 singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the summary data. Note: This is not a comprehensive dataset of all professional tennis matches. Because charting is done by individual volunteer contributors, the data tends to over-represent the biggest tournaments and the most popular players.</p>
+<p>The dataset for this analysis comes from the Tennis Match Charting Project (MCP), available at <a href="https://github.com/JeffSackmann/tennis_MatchChartingProject.git" class="uri">https://github.com/JeffSackmann/tennis_MatchChartingProject.git</a>. The MCP aims to build a detailed public record of professional tennis matches (ATP and WTA Tours). MCP data covers over 11,000 men’s and women’s singles matches including both match-summary statistics and shot-by-shot detail. The project is open to the public both for accessing the data and for contributing new charted matches. This analysis uses only the summary data. Note: This is not a comprehensive dataset of all professional tennis matches. Because charting is done by individual volunteer contributors, the data tends to over-represent the biggest tournaments and the most popular players.</p>
 <p>Four raw data .csv files are downloaded from the GitHub repo and placed in <code>RawData/</code>:</p>
 <ul>
 <li><p><code>charting-m-matches.csv</code></p></li>
@@ -983,23 +983,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Ace Percentage and Serve Points Won Percentage: Mean, Median, SD, Q1, and Q3"</span>,</span>
 <span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Stratified by tour"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="okkcfeawoh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#okkcfeawoh table {
+<div id="bqjxgcddox" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bqjxgcddox table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#okkcfeawoh thead, #okkcfeawoh tbody, #okkcfeawoh tfoot, #okkcfeawoh tr, #okkcfeawoh td, #okkcfeawoh th {
+#bqjxgcddox thead, #bqjxgcddox tbody, #bqjxgcddox tfoot, #bqjxgcddox tr, #bqjxgcddox td, #bqjxgcddox th {
   border-style: none;
 }
 
-#okkcfeawoh p {
+#bqjxgcddox p {
   margin: 0;
   padding: 0;
 }
 
-#okkcfeawoh .gt_table {
+#bqjxgcddox .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1025,12 +1025,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_caption {
+#bqjxgcddox .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#okkcfeawoh .gt_title {
+#bqjxgcddox .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1042,7 +1042,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#okkcfeawoh .gt_subtitle {
+#bqjxgcddox .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1054,7 +1054,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#okkcfeawoh .gt_heading {
+#bqjxgcddox .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1066,13 +1066,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_bottom_border {
+#bqjxgcddox .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_col_headings {
+#bqjxgcddox .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1087,7 +1087,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_col_heading {
+#bqjxgcddox .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1107,7 +1107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#okkcfeawoh .gt_column_spanner_outer {
+#bqjxgcddox .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1119,15 +1119,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#okkcfeawoh .gt_column_spanner_outer:first-child {
+#bqjxgcddox .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#okkcfeawoh .gt_column_spanner_outer:last-child {
+#bqjxgcddox .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#okkcfeawoh .gt_column_spanner {
+#bqjxgcddox .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1139,11 +1139,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#okkcfeawoh .gt_spanner_row {
+#bqjxgcddox .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#okkcfeawoh .gt_group_heading {
+#bqjxgcddox .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1169,7 +1169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#okkcfeawoh .gt_empty_group_heading {
+#bqjxgcddox .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1184,15 +1184,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#okkcfeawoh .gt_from_md > :first-child {
+#bqjxgcddox .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#okkcfeawoh .gt_from_md > :last-child {
+#bqjxgcddox .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#okkcfeawoh .gt_row {
+#bqjxgcddox .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1211,7 +1211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#okkcfeawoh .gt_stub {
+#bqjxgcddox .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1224,7 +1224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#okkcfeawoh .gt_stub_row_group {
+#bqjxgcddox .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1238,15 +1238,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#okkcfeawoh .gt_row_group_first td {
+#bqjxgcddox .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#okkcfeawoh .gt_row_group_first th {
+#bqjxgcddox .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#okkcfeawoh .gt_summary_row {
+#bqjxgcddox .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1256,16 +1256,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#okkcfeawoh .gt_first_summary_row {
+#bqjxgcddox .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_first_summary_row.thick {
+#bqjxgcddox .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#okkcfeawoh .gt_last_summary_row {
+#bqjxgcddox .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1275,7 +1275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_grand_summary_row {
+#bqjxgcddox .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1285,7 +1285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#okkcfeawoh .gt_first_grand_summary_row {
+#bqjxgcddox .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1295,7 +1295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_last_grand_summary_row_top {
+#bqjxgcddox .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1305,11 +1305,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_striped {
+#bqjxgcddox .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#okkcfeawoh .gt_table_body {
+#bqjxgcddox .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1318,7 +1318,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_footnotes {
+#bqjxgcddox .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1332,7 +1332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_footnote {
+#bqjxgcddox .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1341,7 +1341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#okkcfeawoh .gt_sourcenotes {
+#bqjxgcddox .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1355,7 +1355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#okkcfeawoh .gt_sourcenote {
+#bqjxgcddox .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1363,72 +1363,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#okkcfeawoh .gt_left {
+#bqjxgcddox .gt_left {
   text-align: left;
 }
 
-#okkcfeawoh .gt_center {
+#bqjxgcddox .gt_center {
   text-align: center;
 }
 
-#okkcfeawoh .gt_right {
+#bqjxgcddox .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#okkcfeawoh .gt_font_normal {
+#bqjxgcddox .gt_font_normal {
   font-weight: normal;
 }
 
-#okkcfeawoh .gt_font_bold {
+#bqjxgcddox .gt_font_bold {
   font-weight: bold;
 }
 
-#okkcfeawoh .gt_font_italic {
+#bqjxgcddox .gt_font_italic {
   font-style: italic;
 }
 
-#okkcfeawoh .gt_super {
+#bqjxgcddox .gt_super {
   font-size: 65%;
 }
 
-#okkcfeawoh .gt_footnote_marks {
+#bqjxgcddox .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#okkcfeawoh .gt_asterisk {
+#bqjxgcddox .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#okkcfeawoh .gt_indent_1 {
+#bqjxgcddox .gt_indent_1 {
   text-indent: 5px;
 }
 
-#okkcfeawoh .gt_indent_2 {
+#bqjxgcddox .gt_indent_2 {
   text-indent: 10px;
 }
 
-#okkcfeawoh .gt_indent_3 {
+#bqjxgcddox .gt_indent_3 {
   text-indent: 15px;
 }
 
-#okkcfeawoh .gt_indent_4 {
+#bqjxgcddox .gt_indent_4 {
   text-indent: 20px;
 }
 
-#okkcfeawoh .gt_indent_5 {
+#bqjxgcddox .gt_indent_5 {
   text-indent: 25px;
 }
 
-#okkcfeawoh .katex-display {
+#bqjxgcddox .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#okkcfeawoh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#bqjxgcddox div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1526,23 +1526,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Winner Percentage and Unforced Error Percentage: Mean, Median, SD, Q1, and Q3"</span>,</span>
 <span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Stratified by round"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="hqhxgblgfm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#hqhxgblgfm table {
+<div id="veewkvfzll" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#veewkvfzll table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#hqhxgblgfm thead, #hqhxgblgfm tbody, #hqhxgblgfm tfoot, #hqhxgblgfm tr, #hqhxgblgfm td, #hqhxgblgfm th {
+#veewkvfzll thead, #veewkvfzll tbody, #veewkvfzll tfoot, #veewkvfzll tr, #veewkvfzll td, #veewkvfzll th {
   border-style: none;
 }
 
-#hqhxgblgfm p {
+#veewkvfzll p {
   margin: 0;
   padding: 0;
 }
 
-#hqhxgblgfm .gt_table {
+#veewkvfzll .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1568,12 +1568,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_caption {
+#veewkvfzll .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#hqhxgblgfm .gt_title {
+#veewkvfzll .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1585,7 +1585,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#hqhxgblgfm .gt_subtitle {
+#veewkvfzll .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1597,7 +1597,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#hqhxgblgfm .gt_heading {
+#veewkvfzll .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1609,13 +1609,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_bottom_border {
+#veewkvfzll .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_col_headings {
+#veewkvfzll .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1630,7 +1630,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_col_heading {
+#veewkvfzll .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1650,7 +1650,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#hqhxgblgfm .gt_column_spanner_outer {
+#veewkvfzll .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1662,15 +1662,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#hqhxgblgfm .gt_column_spanner_outer:first-child {
+#veewkvfzll .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#hqhxgblgfm .gt_column_spanner_outer:last-child {
+#veewkvfzll .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#hqhxgblgfm .gt_column_spanner {
+#veewkvfzll .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1682,11 +1682,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#hqhxgblgfm .gt_spanner_row {
+#veewkvfzll .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#hqhxgblgfm .gt_group_heading {
+#veewkvfzll .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1712,7 +1712,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#hqhxgblgfm .gt_empty_group_heading {
+#veewkvfzll .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1727,15 +1727,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#hqhxgblgfm .gt_from_md > :first-child {
+#veewkvfzll .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#hqhxgblgfm .gt_from_md > :last-child {
+#veewkvfzll .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#hqhxgblgfm .gt_row {
+#veewkvfzll .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1754,7 +1754,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#hqhxgblgfm .gt_stub {
+#veewkvfzll .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1767,7 +1767,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#hqhxgblgfm .gt_stub_row_group {
+#veewkvfzll .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1781,15 +1781,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#hqhxgblgfm .gt_row_group_first td {
+#veewkvfzll .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#hqhxgblgfm .gt_row_group_first th {
+#veewkvfzll .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#hqhxgblgfm .gt_summary_row {
+#veewkvfzll .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1799,16 +1799,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#hqhxgblgfm .gt_first_summary_row {
+#veewkvfzll .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_first_summary_row.thick {
+#veewkvfzll .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#hqhxgblgfm .gt_last_summary_row {
+#veewkvfzll .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1818,7 +1818,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_grand_summary_row {
+#veewkvfzll .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1828,7 +1828,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#hqhxgblgfm .gt_first_grand_summary_row {
+#veewkvfzll .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1838,7 +1838,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_last_grand_summary_row_top {
+#veewkvfzll .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1848,11 +1848,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_striped {
+#veewkvfzll .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#hqhxgblgfm .gt_table_body {
+#veewkvfzll .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1861,7 +1861,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_footnotes {
+#veewkvfzll .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1875,7 +1875,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_footnote {
+#veewkvfzll .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1884,7 +1884,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#hqhxgblgfm .gt_sourcenotes {
+#veewkvfzll .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1898,7 +1898,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#hqhxgblgfm .gt_sourcenote {
+#veewkvfzll .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1906,72 +1906,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#hqhxgblgfm .gt_left {
+#veewkvfzll .gt_left {
   text-align: left;
 }
 
-#hqhxgblgfm .gt_center {
+#veewkvfzll .gt_center {
   text-align: center;
 }
 
-#hqhxgblgfm .gt_right {
+#veewkvfzll .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#hqhxgblgfm .gt_font_normal {
+#veewkvfzll .gt_font_normal {
   font-weight: normal;
 }
 
-#hqhxgblgfm .gt_font_bold {
+#veewkvfzll .gt_font_bold {
   font-weight: bold;
 }
 
-#hqhxgblgfm .gt_font_italic {
+#veewkvfzll .gt_font_italic {
   font-style: italic;
 }
 
-#hqhxgblgfm .gt_super {
+#veewkvfzll .gt_super {
   font-size: 65%;
 }
 
-#hqhxgblgfm .gt_footnote_marks {
+#veewkvfzll .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#hqhxgblgfm .gt_asterisk {
+#veewkvfzll .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#hqhxgblgfm .gt_indent_1 {
+#veewkvfzll .gt_indent_1 {
   text-indent: 5px;
 }
 
-#hqhxgblgfm .gt_indent_2 {
+#veewkvfzll .gt_indent_2 {
   text-indent: 10px;
 }
 
-#hqhxgblgfm .gt_indent_3 {
+#veewkvfzll .gt_indent_3 {
   text-indent: 15px;
 }
 
-#hqhxgblgfm .gt_indent_4 {
+#veewkvfzll .gt_indent_4 {
   text-indent: 20px;
 }
 
-#hqhxgblgfm .gt_indent_5 {
+#veewkvfzll .gt_indent_5 {
   text-indent: 25px;
 }
 
-#hqhxgblgfm .katex-display {
+#veewkvfzll .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#hqhxgblgfm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#veewkvfzll div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2494,23 +2494,23 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
 <span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Mean Player Metrics"</span>,</span>
 <span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"Across All Charted Matches"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="cyrcbkfbcg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#cyrcbkfbcg table {
+<div id="eeloynaicb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eeloynaicb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#cyrcbkfbcg thead, #cyrcbkfbcg tbody, #cyrcbkfbcg tfoot, #cyrcbkfbcg tr, #cyrcbkfbcg td, #cyrcbkfbcg th {
+#eeloynaicb thead, #eeloynaicb tbody, #eeloynaicb tfoot, #eeloynaicb tr, #eeloynaicb td, #eeloynaicb th {
   border-style: none;
 }
 
-#cyrcbkfbcg p {
+#eeloynaicb p {
   margin: 0;
   padding: 0;
 }
 
-#cyrcbkfbcg .gt_table {
+#eeloynaicb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2536,12 +2536,12 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_caption {
+#eeloynaicb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#cyrcbkfbcg .gt_title {
+#eeloynaicb .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2553,7 +2553,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-bottom-width: 0;
 }
 
-#cyrcbkfbcg .gt_subtitle {
+#eeloynaicb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2565,7 +2565,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-top-width: 0;
 }
 
-#cyrcbkfbcg .gt_heading {
+#eeloynaicb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2577,13 +2577,13 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_bottom_border {
+#eeloynaicb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_col_headings {
+#eeloynaicb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2598,7 +2598,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_col_heading {
+#eeloynaicb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2618,7 +2618,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   overflow-x: hidden;
 }
 
-#cyrcbkfbcg .gt_column_spanner_outer {
+#eeloynaicb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2630,15 +2630,15 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   padding-right: 4px;
 }
 
-#cyrcbkfbcg .gt_column_spanner_outer:first-child {
+#eeloynaicb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#cyrcbkfbcg .gt_column_spanner_outer:last-child {
+#eeloynaicb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#cyrcbkfbcg .gt_column_spanner {
+#eeloynaicb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2650,11 +2650,11 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   width: 100%;
 }
 
-#cyrcbkfbcg .gt_spanner_row {
+#eeloynaicb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#cyrcbkfbcg .gt_group_heading {
+#eeloynaicb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2680,7 +2680,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   text-align: left;
 }
 
-#cyrcbkfbcg .gt_empty_group_heading {
+#eeloynaicb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2695,15 +2695,15 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   vertical-align: middle;
 }
 
-#cyrcbkfbcg .gt_from_md > :first-child {
+#eeloynaicb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#cyrcbkfbcg .gt_from_md > :last-child {
+#eeloynaicb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#cyrcbkfbcg .gt_row {
+#eeloynaicb .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2722,7 +2722,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   overflow-x: hidden;
 }
 
-#cyrcbkfbcg .gt_stub {
+#eeloynaicb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2735,7 +2735,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   padding-right: 5px;
 }
 
-#cyrcbkfbcg .gt_stub_row_group {
+#eeloynaicb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2749,15 +2749,15 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   vertical-align: top;
 }
 
-#cyrcbkfbcg .gt_row_group_first td {
+#eeloynaicb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#cyrcbkfbcg .gt_row_group_first th {
+#eeloynaicb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#cyrcbkfbcg .gt_summary_row {
+#eeloynaicb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2767,16 +2767,16 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   padding-right: 5px;
 }
 
-#cyrcbkfbcg .gt_first_summary_row {
+#eeloynaicb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_first_summary_row.thick {
+#eeloynaicb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#cyrcbkfbcg .gt_last_summary_row {
+#eeloynaicb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2786,7 +2786,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_grand_summary_row {
+#eeloynaicb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2796,7 +2796,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   padding-right: 5px;
 }
 
-#cyrcbkfbcg .gt_first_grand_summary_row {
+#eeloynaicb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2806,7 +2806,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_last_grand_summary_row_top {
+#eeloynaicb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2816,11 +2816,11 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_striped {
+#eeloynaicb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#cyrcbkfbcg .gt_table_body {
+#eeloynaicb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2829,7 +2829,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_footnotes {
+#eeloynaicb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2843,7 +2843,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_footnote {
+#eeloynaicb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2852,7 +2852,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   padding-right: 5px;
 }
 
-#cyrcbkfbcg .gt_sourcenotes {
+#eeloynaicb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2866,7 +2866,7 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#cyrcbkfbcg .gt_sourcenote {
+#eeloynaicb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2874,72 +2874,72 @@ Rafael Nadal   0.01941294  -0.02021050</code></pre>
   padding-right: 5px;
 }
 
-#cyrcbkfbcg .gt_left {
+#eeloynaicb .gt_left {
   text-align: left;
 }
 
-#cyrcbkfbcg .gt_center {
+#eeloynaicb .gt_center {
   text-align: center;
 }
 
-#cyrcbkfbcg .gt_right {
+#eeloynaicb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#cyrcbkfbcg .gt_font_normal {
+#eeloynaicb .gt_font_normal {
   font-weight: normal;
 }
 
-#cyrcbkfbcg .gt_font_bold {
+#eeloynaicb .gt_font_bold {
   font-weight: bold;
 }
 
-#cyrcbkfbcg .gt_font_italic {
+#eeloynaicb .gt_font_italic {
   font-style: italic;
 }
 
-#cyrcbkfbcg .gt_super {
+#eeloynaicb .gt_super {
   font-size: 65%;
 }
 
-#cyrcbkfbcg .gt_footnote_marks {
+#eeloynaicb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#cyrcbkfbcg .gt_asterisk {
+#eeloynaicb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#cyrcbkfbcg .gt_indent_1 {
+#eeloynaicb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#cyrcbkfbcg .gt_indent_2 {
+#eeloynaicb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#cyrcbkfbcg .gt_indent_3 {
+#eeloynaicb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#cyrcbkfbcg .gt_indent_4 {
+#eeloynaicb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#cyrcbkfbcg .gt_indent_5 {
+#eeloynaicb .gt_indent_5 {
   text-indent: 25px;
 }
 
-#cyrcbkfbcg .katex-display {
+#eeloynaicb .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#cyrcbkfbcg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#eeloynaicb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
