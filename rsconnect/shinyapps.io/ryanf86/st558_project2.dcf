@@ -5,7 +5,7 @@ account: ryanf86
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 17602174
-bundleId: 12255259
+bundleId: 12257023
 url: https://ryanf86.shinyapps.io/st558_project2/
 version: 1
 asMultiple: FALSE
