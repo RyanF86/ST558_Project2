@@ -9,14 +9,14 @@ library(tidyverse)
 library(gt) # for static summary tables
 library(fmsb) # for radarchart()
 library(shiny)
-library(shinyalert)
 library(DT) # for interactive data tables
+library(shinycssloaders) # for loading spinners
 
 # helpers.R contains names of variables, useful functions, and other items
 # also helpers.R reads CombinedData.rds
 source("helpers.R")
 
-# Define UI for application that draws a histogram
+# Define UI 
 ui <- fluidPage(
 
   titlePanel("Tennis Data Exploration"),
@@ -38,7 +38,7 @@ ui <- fluidPage(
       # choose two numeric variables, with dynamic UI sliders
       selectizeInput(inputId = "num_subset_first", label = "First Numeric Variable", choices = subset_vars, selected = "year"),
       uiOutput("slider_first"),
-      selectizeInput(inputId = "num_subset_second", label = "Second Numeric Variable", choices = subset_vars, selected = "total_pts"),
+      selectizeInput(inputId = "num_subset_second", label = "Second Numeric Variable", choices = subset_vars, selected = "unforced"),
       uiOutput("slider_second"),
       br(),
       # action button to get the sample
@@ -50,6 +50,8 @@ ui <- fluidPage(
         
         tabPanel("About",
                  
+                 br(),
+                 p("This application is used for exploring professional tennis match data."),
                  h2("About the Data:"),
                  br(),
                  #insert images
@@ -124,7 +126,7 @@ ui <- fluidPage(
                      a("Isner–Mahut match at the 2010 Wimbledon Championships", 
                        href = "https://en.wikipedia.org/wiki/Isner%E2%80%93Mahut_match_at_the_2010_Wimbledon_Championships",
                        target = "_blank"),
-                     " is excluded from the data. At 980 total points (versus 569 for the next-longest charted match), it is such an extreme outlier that including it would stretch the numeric subsetting sliders to the point of being unusable."
+                     " is an extreme outlier due to its length. The match had 980 total points, compared to 569 for the next-longest charted match. For practical reasons, the maximum ranges of the Total Points, Winners, and Aces sliders do not extend far enough to include it. The match can still appear in a subset if Year and Unforced Errors are used as the two numeric subsetting variables."
                    ),
                    tags$li(
                      "The Player Comparison tab averages each metric across all of a player's matches within the current subset. Averages built on only a few matches can be misleading. The number of charted matches per player is shown in the table below the radar chart, and a warning appears when a player has fewer than five."
@@ -132,7 +134,7 @@ ui <- fluidPage(
                    tags$li(
                      "Because the Match Charting Project is crowdsourced, the data over-represents the biggest tournaments and the most popular players. All summaries describe the charted sample, not the full population of professional tennis matches."
                    )
-                 ),                 
+                 )                 
         ),
         
         tabPanel("Data Download",
@@ -148,12 +150,12 @@ ui <- fluidPage(
                             # Display Bar Graph (for 1 categorical)
                             conditionalPanel(
                               condition = "input.categorical_second == 'None' | input.categorical_second == input.categorical_first",
-                              plotOutput("bar_one")
+                              withSpinner(plotOutput("bar_one"))
                               ),
                             # Display Side-By-Side Bar Graph (for 2 categorical)
                             conditionalPanel(
                               condition = "input.categorical_second != 'None' && input.categorical_second != input.categorical_first",
-                              plotOutput("bar_two")
+                              withSpinner(plotOutput("bar_two"))
                               ),
                             # Display Contingency Table (for 1 categorical)
                             conditionalPanel(
@@ -175,18 +177,18 @@ ui <- fluidPage(
                             # Display Box Plot (for 1 numerical), optional side-by-side
                             conditionalPanel(
                               condition = "input.numeric_second == 'None' | input.numeric_second == input.numeric_first",
-                              plotOutput("box")
+                              withSpinner(plotOutput("box"))
                             ),
                             # Display Histogram (for 1 numerical), optional faceting
                             conditionalPanel(
                               condition = "input.numeric_second == 'None' | input.numeric_second == input.numeric_first",
                               br(),
-                              plotOutput("histogram")
+                              withSpinner(plotOutput("histogram"))
                             ),                            
                             # Display Scatter Plot (for 2 numerical), optional coloring
                             conditionalPanel(
                               condition = "input.numeric_second != 'None' && input.numeric_second != input.numeric_first",
-                              plotOutput("scatter")
+                              withSpinner(plotOutput("scatter"))
                             ),                            
 
                             # Display Numeric Summary
@@ -197,7 +199,7 @@ ui <- fluidPage(
                    tabPanel("Player Comparison", # since there are so many options for the player dropdown, this will be updated on the server side instead
                             selectizeInput(inputId = "first_player", label = "First Player", choices = NULL), # see updateSelectizeInput() on server
                             selectizeInput(inputId = "second_player", label = "Second Player", choices = NULL), # see updateSelectizeInput() on server
-                            plotOutput("radar"), # display radar chart
+                            withSpinner(plotOutput("radar")), # display radar chart
                             br(),
                             uiOutput("radar_warning"), # display warnings, if applicable
                             br(),
@@ -211,8 +213,6 @@ ui <- fluidPage(
   )
 )
 
-#initialize mysubset with everything
-mysubset <- CombinedData
 
 # Define server logic
 server <- function(input, output, session) {
@@ -428,7 +428,8 @@ server <- function(input, output, session) {
     if (input$numeric_second != "None" && input$numeric_second != input$numeric_first) {
       num_vars <- c(num_vars, input$numeric_second)
     }
-    numdata <- mysubset()
+    numdata <- mysubset() # numdata passed below containing the subset
+    validate(need(nrow(numdata) > 0, "No data matches the current filters.")) # confirm the subset has content, otherwise the table generates with "NaN" and "Inf" 
     if (input$numeric_group_by != "None") { # apply grouping only if a group variable is selected
       numdata <- numdata |> 
         drop_na(.data[[input$numeric_group_by]]) |>
@@ -499,7 +500,7 @@ server <- function(input, output, session) {
                cglcol = "grey", # grid line color
                cglty = 1, # solid grid line
                cglwd = 0.5, # grid line width
-               title = "Mean Metrics Across All Charted Matches")
+               title = "Mean Metrics Across Match Subset")
     legend("topright", # build legend in top right
            legend = rownames(radardata)[-c(1, 2)],   # drop max/min rows
            col = c("red", "blue"), # legend colors
@@ -535,7 +536,7 @@ server <- function(input, output, session) {
       gt() |>
       fmt_number(columns = -c(Player, `Charted Matches`), decimals = 3) |> # round to 3 decimals for select columns
       tab_header(title = "Mean Player Metrics",
-                 subtitle = "Across All Charted Matches")
+                 subtitle = "Across Match Subset")
   })
   
 }

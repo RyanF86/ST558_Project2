@@ -31,6 +31,6 @@ Most variable names are self-explanatory to anyone familiar with the basics of t
 
 ## Other Notes
 
-- The [Isner–Mahut match at the 2010 Wimbledon Championships](https://en.wikipedia.org/wiki/Isner%E2%80%93Mahut_match_at_the_2010_Wimbledon_Championships) is excluded from the data. At 980 total points (versus 569 for the next-longest charted match), it is such an extreme outlier that including it would stretch the numeric subsetting sliders to the point of being unusable.
+- The [Isner–Mahut match at the 2010 Wimbledon Championships](https://en.wikipedia.org/wiki/Isner%E2%80%93Mahut_match_at_the_2010_Wimbledon_Championships) is an extreme outlier due to its length. The match had 980 total points, compared to 569 for the next-longest charted match. For practical reasons, the maximum ranges of the Total Points, Winners, and Aces sliders do not extend far enough to include it. The match can still appear in a subset if Year and Unforced Errors are used as the two numeric subsetting variables.
 - The Player Comparison tab averages each metric across all of a player's matches within the current subset. Averages built on only a few matches can be misleading. The number of charted matches per player is shown in the table below the radar chart, and a warning appears when a player has fewer than five.
 - Because the Match Charting Project is crowdsourced, the data over-represents the biggest tournaments and the most popular players. All summaries describe the charted sample, not the full population of professional tennis matches.
